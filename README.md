@@ -1,5 +1,27 @@
 # Richard Zg
 
+*2018/11/22*
+
+It looks like still have a lot of works for build even the simplest one.
+
+But today, I found a convenient tool for build a static site, the VuePress, a SSG or static site generator.
+
+Even though I haven't experienced Vue, but it looks interesting, and I'm interested in it from long time ago.
+
+But I have using React for a long time, for build old one of my blog, both of them is awesome!
+
+For now, my target is to build the simplest one, seems the VuePress is a good choice!
+
+Just try it!
+
+So, I have to remove my React develope environment, and initial the project withe VuePress.
+
+Ok, no more talking, just doing it!
+
+***
+
+*2018/11/21*
+
 For this version, I'm planing to build a simplest site just for show my blog posts.
 
 It was painful to build and then release a full features blog site that with a beautiful front-end UI and a powerful back-end server.

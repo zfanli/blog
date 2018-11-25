@@ -1,5 +1,25 @@
 # Richard Zg
 
+*2018/11/25*
+
+I have to update this README for some commits to beautify my github dashboard XD.
+
+I found a solution for static site comment, the `gitalk` library.
+
+It's means I can get a almost full features blog if I use VuePress + gitalk to deploy my blog on GitHub Pages service!
+
+It's amazing!
+
+What a useful tool!
+
+I have to do some samples to be familiar with that tool.
+
+And then, my blog will be built base on VuePress + gitalk!
+
+Give me more time!
+
+***
+
 *2018/11/22*
 
 It looks like still have a lot of works for build even the simplest one.

@@ -1,6 +1,26 @@
 # Richard Zg
 
-*2018/12/13*
+## Project setup
+
+```
+yarn install
+```
+
+### Compiles and hot-reloads for development
+
+```
+yarn run serve
+```
+
+### Compiles and minifies for production
+
+```
+yarn run build
+```
+
+---
+
+_2018/12/13_
 
 The things seem like a little bit complicated.
 
@@ -12,7 +32,7 @@ Finally, fortunately, the Vue.js is also a powerful framework, I can use it to b
 
 And then, let me complete it with VuePress or other tools gradually.
 
-*2018/11/25*
+_2018/11/25_
 
 I have to update this README just for make a commit to beautify my dashboard XD.
 
@@ -28,9 +48,9 @@ I'll going to do some practices with it.
 
 Give me more time!
 
-***
+---
 
-*2018/11/22*
+_2018/11/22_
 
 It looks still have a lot of works to build even the simplest one.
 
@@ -48,9 +68,9 @@ So, I have to remove my React develope environment, and initial the project with
 
 Ok, no more talking, just doing it!
 
-***
+---
 
-*2018/11/21*
+_2018/11/21_
 
 For this version, I'm planing to build a simplest site just for show my blog posts.
 

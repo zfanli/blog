@@ -1,20 +1,30 @@
 # Richard Zg
 
+*2018/12/13*
+
+The things seem like a little bit complicated.
+
+The `VuePress` is really useful, but its document does not look like easy to understand.
+
+Its old version is featureless, and the new version is still in alpha phase.
+
+Finally, fortunately, the Vue.js is also a powerful framework, I can use it to build a simple SPA site first.
+
+And then, let me complete it with VuePress or other tools gradually.
+
 *2018/11/25*
 
-I have to update this README for some commits to beautify my github dashboard XD.
+I have to update this README just for make a commit to beautify my dashboard XD.
 
-I found a solution for static site comment, the `gitalk` library.
+I finally found out a solution for static site comment support, it's the `gitalk`.
 
-It's means I can get a almost full features blog if I use VuePress + gitalk to deploy my blog on GitHub Pages service!
+It means I can get a almost full features blog just use VuePress + gitalk to build my blog!
 
-It's amazing!
+Amazing!
 
 What a useful tool!
 
-I have to do some samples to be familiar with that tool.
-
-And then, my blog will be built base on VuePress + gitalk!
+I'll going to do some practices with it.
 
 Give me more time!
 
@@ -22,11 +32,11 @@ Give me more time!
 
 *2018/11/22*
 
-It looks like still have a lot of works for build even the simplest one.
+It looks still have a lot of works to build even the simplest one.
 
-But today, I found a convenient tool for build a static site, the VuePress, a SSG or static site generator.
+But today, I found a convenient tool to build a static site, the VuePress, a SSG or static site generator.
 
-Even though I haven't experienced Vue, but it looks interesting, and I'm interested in it from long time ago.
+Even though I haven't used Vue, but it looks interesting, and I'm interested in it for long time ago.
 
 But I have using React for a long time, for build old one of my blog, both of them is awesome!
 

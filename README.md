@@ -32,6 +32,8 @@ Finally, fortunately, the Vue.js is also a powerful framework, I can use it to b
 
 And then, let me complete it with VuePress or other tools gradually.
 
+---
+
 _2018/11/25_
 
 I have to update this README just for make a commit to beautify my dashboard XD.

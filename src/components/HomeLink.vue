@@ -11,4 +11,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.home-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 900;
+}
 </style>

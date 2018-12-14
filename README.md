@@ -18,6 +18,40 @@ yarn run serve
 yarn run build
 ```
 
+## Configuration
+
+Edit `src/App.config.js` to configure this app.
+
+```js
+import avatar from './assets/avatar.png'
+
+export default {
+  info: {
+    title: 'use for home link',
+    name: 'your name',
+    bio: 'your bio',
+    avatar, // path to avatar
+    username: 'username of github for make a link',
+  },
+  config: {
+    // delete this block to disable ga
+    ga: {
+      id: 'tack id of google analysis',
+    },
+    // delete this block to disable gitalk
+    gitalk: () => ({
+      clientID: 'client id',
+      clientSecret: 'client secret',
+      repo: 'repo for store comments',
+      owner: 'username of owner',
+      admin: ['array of usernames'],
+      id: 'uniqueness and less then 50', // location.path
+      distractionFreeMode: false, // masking on focus
+    }),
+  },
+}
+```
+
 ---
 
 _2018/12/13_

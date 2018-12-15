@@ -36,13 +36,13 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/styles/common.scss';
+@import '@/styles/font.scss';
 
 .home {
   .head {
     text-align: left;
     font-size: 2.5rem;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS',
-      'Microsoft YaHei', 'Hiragino', sans-serif;
+    font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Hiragino', sans-serif;
     font-weight: 900;
     color: #333;
     margin-bottom: 2.5rem;

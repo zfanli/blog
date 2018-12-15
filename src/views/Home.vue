@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="post" v-for="p in postList" :key="p.attributes.date">
-      <router-link to class="post-title">{{ p.attributes.title }}</router-link>
+      <router-link :to="`/post/${p.attributes.title}`" class="post-title">{{ p.attributes.title }}</router-link>
       <small class="post-info">
         <span class="post-info-date">{{ formatDate(p.attributes.date) }}</span>
         <span>{{ ' · ' }}</span>

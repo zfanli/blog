@@ -4,7 +4,7 @@ export default {
   info: {
     title: 'Richardzg', // use for homepage link
     name: 'Richard',
-    bio: '我会记录一些笔记和总结。',
+    bio: '我会不定期地记录一些笔记和总结。',
     avatar: '', // path to avatar image
     username: 'zfanli', // username of github
   },

@@ -17,6 +17,9 @@ export default new Vuex.Store({
     postList(state, getters) {
       return getters.postIds.map(id => state.posts[id])
     },
+    getPostByTitle(_, getters) {
+      return title => getters.postList.find(p => p.attributes.title === title)
+    },
   },
   mutations: {
     [PUSH_POST_FRONT_MATTER_OBJECT](state, fm) {

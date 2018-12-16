@@ -5,6 +5,8 @@
 </template>
 
 <style lang="scss">
+@import './styles/common.scss';
+
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +21,7 @@
   max-width: 700px;
   margin: 0 auto;
   padding: 2.5rem 1rem;
+  overflow: hidden;
 
   @media (min-width: 701px) {
     padding: 2.5rem;

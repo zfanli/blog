@@ -1,1 +1,11 @@
-$font-color: #C85B7A;
+@import './constants.scss';
+
+.link {
+  text-decoration: none;
+  box-shadow: 0 1px 0 0 currentColor;
+  color: $font-color;
+
+  &:hover {
+    box-shadow: none;
+  }
+}

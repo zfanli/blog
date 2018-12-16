@@ -61,7 +61,7 @@ Front matter of post file.
 ```yaml
 ---
 title: title of post # *required
-subtitle: some description about this post # *required
+subtitle: some descriptions about this post # *required
 date: 2018-12-16 00:00:00 # *required
 externalCSSFileName: file name of external CSS if need # optional
 tags: # optional

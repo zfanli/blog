@@ -13,7 +13,8 @@ export default {
 <style lang="scss" scoped>
 .home-link {
   text-decoration: none;
-  color: #333;
+  color: inherit;
+  font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Hiragino', sans-serif;
   font-weight: 900;
 }
 </style>

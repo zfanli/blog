@@ -21,6 +21,7 @@
     "@vue/cli-plugin-eslint": "^3.2.0",
     "@vue/cli-service": "^3.2.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-prismjs": "^1.0.2",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
     "front-matter-loader": "^0.2.0",

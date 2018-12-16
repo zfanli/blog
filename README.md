@@ -1,6 +1,6 @@
 # richardzg
 
-Simple blog site, build with Vue.js, and styling almost copy from [gaearon/overreacted.io](https://github.com/gaearon/overreacted.io).
+Simple blog site, build with Vue.js, and styling almost copied from [gaearon/overreacted.io](https://github.com/gaearon/overreacted.io).
 
 ## Project setup
 
@@ -54,7 +54,9 @@ export default {
 }
 ```
 
-### Front Matter
+## Front Matter
+
+Front matter of post file.
 
 ```yaml
 ---

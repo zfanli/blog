@@ -10,8 +10,6 @@ tags:
 
 ### REST?
 
----
-
 REST（Representational State Transfer），表述性状态转移。
 
 `Representational` ：资源表述的形式。例如 JSON 和 XML 等。
@@ -22,8 +20,6 @@ REST（Representational State Transfer），表述性状态转移。
 
 ### REST api 关注什么？
 
----
-
 关注下面三个点。
 
 - `URL` REST 使用 URL 对资源进行识别和定位。URL 表示需要什么。
@@ -31,8 +27,6 @@ REST（Representational State Transfer），表述性状态转移。
 - `Status code` REST 用 HTTP 状态码告知结果。状态码表示结果。
 
 ### Spring MVC 对 REST 的支持
-
----
 
 **Controller 可以处理所有 HTTP 方法**
 
@@ -224,8 +218,6 @@ public @ResponseBody Error notFoundError() {
 ```
 
 ### 测试 REST api 的使用
-
----
 
 API 是实现好了，总归需要被使用。但是在这之前我们先看看 Target 类的内部。
 
@@ -481,5 +473,3 @@ Date: Sun, 08 Oct 2017 16:33:33 GMT
 请求的 header 中我们将 X-XSRF-TOKEN 放了进去，所以我们顺利通过了验证。服务器处理了我们的请求，并且将处理后的对象发给了我们。（id 是保存后取出来的）
 
 在响应中我们得到了更合理的 201 状态码，同时 Location 属性告诉了我们下一步应该怎么做。
-
-### 到这里我们所做的尝试都成功了，接下来就是试着将其应用到实际中去吧...

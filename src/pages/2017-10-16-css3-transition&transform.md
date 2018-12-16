@@ -10,8 +10,6 @@ tags:
 
 ### transition 过渡效果
 
----
-
 先贴一份 W3 官方的说明文档：[CSS Transitions](https://www.w3.org/TR/css3-transitions/#transition-property-property)。
 
 CSS 的 transition 属性可以让我们从此放弃简单的 JS 动画，因为 CSS 就可以做到了。先来看看兼容性和各个浏览器的写法。
@@ -313,8 +311,6 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
 
 ### CSS 的 transform 属性
 
----
-
 Transform 是变形的意思。就如字面意思一样，CSS 的 transform 属性的作用就是给指定元素变形。这个属性配合上面我们介绍的属性可以获得很棒的效果，我们先来看一个例子。
 
 <div class="test-container-big">
@@ -413,6 +409,6 @@ Transform 是变形的意思。就如字面意思一样，CSS 的 transform 属�
 | skewY(angle)                              | 定义沿着 Y 轴的 2D 倾斜转换。           |
 | perspective(n)                            | 为 3D 转换元素定义透视视图              |
 
-具体示例用法，咱还是看 W3School 的教程吧。其实基本看上面的例子就能使用了。
+详细参考 W3Schools 的文档。
 
 [CSS3 transform Property](https://www.w3schools.com/cssref/css3_pr_transform.asp)

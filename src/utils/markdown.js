@@ -1,12 +1,18 @@
 import Md from 'markdown-it'
 import taskLists from 'markdown-it-task-lists'
+import { highlight, languages } from 'prismjs'
 
 const md = new Md({
-  // Add `line-numbers` class for tell it to display the line numbers.
-  // This is just a flag, and do not mean line numbers must be displayed.
-  // The true trigger of line numbers' display is at `highlight.js`.
-  // Check if the line numbers relevant import was imported correctly.
-  langPrefix: 'line-numbers language-',
+  highlight: (str, lang) => {
+    let code
+    if (languages[lang]) {
+      code = highlight(str, languages[lang], lang)
+    } else {
+      // if language is not supported, just wrap classes and return
+      code = str
+    }
+    return `<pre class="language-${lang}"><code class="language-${lang}">${code}</code></pre>`
+  },
 }).use(taskLists)
 
 export default md.render.bind(md)

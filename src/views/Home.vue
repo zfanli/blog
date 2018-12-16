@@ -21,8 +21,8 @@
     <div class="post" v-for="p in postList" :key="p.attributes.date">
       <router-link :to="`/post/${p.attributes.title}`" class="post-title">{{ p.attributes.title }}</router-link>
       <small class="post-info">
-        <span class="post-info-date">{{ p.attributes.formatedDate }}</span>
-        <span>{{ ' · ' }}</span>
+        <span>{{ p.attributes.formatedDate }}</span>
+        <span>{{ ' • ' }}</span>
         <span>{{ p.attributes.timeToRead }}</span>
       </small>
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
@@ -57,7 +57,6 @@ export default {
   .head {
     text-align: left;
     font-size: 2.5rem;
-    font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Hiragino', sans-serif;
     font-weight: 900;
     color: #333;
     margin-bottom: 2.5rem;

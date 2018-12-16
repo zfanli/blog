@@ -14,7 +14,7 @@ export default {
 .home-link {
   text-decoration: none;
   color: inherit;
-  font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Hiragino', sans-serif;
+  font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Yuanti SC', sans-serif;
   font-weight: 900;
 }
 </style>

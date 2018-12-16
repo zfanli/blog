@@ -13,8 +13,8 @@ const config = ac.config.gitalk
  * gitalk().render('gitalk-container')
  */
 export default (config
-  ? () =>
+  ? id =>
       new Gitalk({
-        ...config(),
+        ...config(id),
       })
   : null)

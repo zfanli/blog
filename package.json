@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "gitalk": "^1.4.1",
     "markdown-it": "^8.4.2",
     "markdown-it-task-lists": "^2.1.1",
     "prismjs": "^1.15.0",

@@ -12,7 +12,8 @@ export default new Vuex.Store({
   },
   getters: {
     postIds(state) {
-      return Object.keys(state.posts).sort()
+      // sort by keys desc
+      return Object.keys(state.posts).sort((a, b) => a - b > 0)
     },
     postList(state, getters) {
       return getters.postIds.map(id => state.posts[id])

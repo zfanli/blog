@@ -12,7 +12,7 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/post/:title',
+      path: '/post/:postTitle',
       name: 'post',
       component: () =>
         import(/* webpackChunkName: "post" */ './views/Post.vue'),

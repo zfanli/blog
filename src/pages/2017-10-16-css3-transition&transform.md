@@ -58,12 +58,11 @@ CSS 的 transition 属性可以让我们从此放弃简单的 JS 动画，因为
 
 我们先来看看需要我们设置的参数。
 
-```text
-    /*参数*/
-    transition: [<transition-property> || <transition-duration>
-            || <transition-timing-function> || <transition-delay>]
-            [, [<transition-property> || <transition-duration>
-            || <transition-timing-function> || <transition-delay>]]*);
+```css
+transition: [<transition-property> || <transition-duration>
+        || <transition-timing-function> || <transition-delay>]
+        [, [<transition-property> || <transition-duration>
+        || <transition-timing-function> || <transition-delay>]]*);
 ```
 
 过渡效果有四个可设定的参数，并且每个参数之间使用空格隔开，逗号将分隔新的过渡效果设定。

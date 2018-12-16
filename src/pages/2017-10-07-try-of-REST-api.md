@@ -54,36 +54,34 @@ public enum RequestMethod {
 在类路径中加入 JSON 的依赖，HttpMethodConverter 或自动加载 JSON 解析器。
 
 ```xml
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>2.9.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>2.9.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.9.1</version>
-    </dependency>
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-core</artifactId>
+  <version>2.9.1</version>
+</dependency>
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-annotations</artifactId>
+  <version>2.9.1</version>
+</dependency>
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <version>2.9.1</version>
+</dependency>
 ```
 
 下面是处理请求并发送 JSON 格式资源给客户端的示例。
 
 ```java
-    @RequestMapping(value = "/target",
-        method = RequestMethod.GET,
-        produces = "application/json")
-    public @ResponseBody Target getTarget(@RequestParam(value = "id") int id) {
-        // get the target object by id
-        Target target = Respository.getTargetById(id);
-        return target;
-    }
+@RequestMapping(value = "/target",
+    method = RequestMethod.GET,
+    produces = "application/json")
+public @ResponseBody Target getTarget(@RequestParam(value = "id") int id) {
+    // get the target object by id
+    Target target = Respository.getTargetById(id);
+    return target;
+}
 ```
 
 这个方法可以处理路径为`host/target`的 GET 请求，并使用 produces 属性进一步限制只对接收 JSON 资源的请求进行响应。这个方法接收一个名为`id`的查询参数。返回类型前的`@ResponseBody`注解告诉消息转换器将返回的对象作为资源（这里是 JSON）发送给客户端。
@@ -95,14 +93,14 @@ public enum RequestMethod {
 下面是接收客户端数据并作出响应的示例。
 
 ```java
-    @RequestMapping(value = "/target",
-        method = RequestMethod.POST,
-        consumes = "application/json")
-    public @ResponseBody Target addTarget(@RequestBody Target target){
-        // save the target object
-        Target target = Respository.addTarget(target);
-        return Target;
-    }
+@RequestMapping(value = "/target",
+    method = RequestMethod.POST,
+    consumes = "application/json")
+public @ResponseBody Target addTarget(@RequestBody Target target){
+    // save the target object
+    Target target = Respository.addTarget(target);
+    return Target;
+}
 ```
 
 这个方法可以处理路径为`host/target`的 POST 请求，并使用 consumes 属性进一步限制只对数据为 JSON 格式的请求进行响应。参数前的`@RequestBody`注解可以告诉消息转换器将请求中的数据转换为 Target 对象。这里我们处理结束之后使用`@ResponseBody`注解将加工后的 target 对象作为资源再返回给客户端。
@@ -212,19 +210,17 @@ UriComponentBuilder 的用法并不复杂，我们使用 `.path("URL")` 方法�
 哦，对了，在此之前还要说一下异常捕获和响应错误状态码。其实没有什么需要说的，和 spring MVC 下普通的异常处理一样。相信大家看看下面这个示例就了解了，这里就不多做解释了，注意返回类型即可。
 
 ```java
-    @ExceptionHandler(targetException.class)
-    public ResponseEntity<Error> error() {
-        // do somethings with error object
-        return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(targetNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public @ResponseBody Error notFoundError() {
-        // do somethings with error object
-        return error;
-    }
-
+@ExceptionHandler(targetException.class)
+public ResponseEntity<Error> error() {
+    // do somethings with error object
+    return new ResponseEntity<>(error,HttpStatus.NOT_FOUND);
+}
+@ExceptionHandler(targetNotFoundException.class)
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public @ResponseBody Error notFoundError() {
+    // do somethings with error object
+    return error;
+}
 ```
 
 ### 测试 REST api 的使用

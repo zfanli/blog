@@ -8,7 +8,11 @@
       <div class="intro-body">
         <div class="intro-name">
           这是
-          <a class="intro-link" :href="`https://github.com/${username}`" target="_blank">{{ name }}</a>
+          <a
+            class="intro-link link"
+            :href="`https://github.com/${username}`"
+            target="_blank"
+          >{{ name }}</a>
           的个人博客，
         </div>
         <div class="intro-bio">{{ bio }}</div>
@@ -17,9 +21,9 @@
     <div class="post" v-for="p in postList" :key="p.attributes.date">
       <router-link :to="`/post/${p.attributes.title}`" class="post-title">{{ p.attributes.title }}</router-link>
       <small class="post-info">
-        <span class="post-info-date">{{ formatDate(p.attributes.date) }}</span>
+        <span class="post-info-date">{{ p.attributes.formatedDate }}</span>
         <span>{{ ' · ' }}</span>
-        <span>{{ timeToRead(p.body.length) }}</span>
+        <span>{{ p.attributes.timeToRead }}</span>
       </small>
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
     </div>
@@ -42,25 +46,11 @@ export default {
     HomeLink,
     BlogAvatar,
   },
-  methods: {
-    formatDate(date) {
-      const d = new Date(date)
-      const year = d.getFullYear()
-      const month = d.getMonth() + 1
-      const day = d.getDate()
-      return `${year}年 ${month}月 ${day}日`
-    },
-    timeToRead(length) {
-      const time = Math.round(length / 500)
-      const tea = new Array(Math.round(time / 5)).join('☕')
-      return `${tea} 阅读时间${time}分钟`
-    },
-  },
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/common.scss';
+@import '@/styles/constants.scss';
 @import '@/styles/font.scss';
 
 .home {
@@ -84,14 +74,6 @@ export default {
 
     .intro-body {
       line-height: 1.75rem;
-
-      .intro-name {
-        .intro-link {
-          text-decoration: none;
-          box-shadow: 0 1px 0 0 currentColor;
-          color: $font-color;
-        }
-      }
     }
   }
 

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { IMPORT_POST_DYNAMIC, PUSH_POST_FRONT_MATTER_OBJECT } from './actions'
+import { IMPORT_POST_DYNAMIC, PUSH_POST_WITH_FRONT_MATTER } from './actions'
 import ac from './App.config'
 
 Vue.use(Vuex)
@@ -22,8 +22,23 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    [PUSH_POST_FRONT_MATTER_OBJECT](state, fm) {
-      const t = new Date(fm.attributes.date).getTime()
+    [PUSH_POST_WITH_FRONT_MATTER](state, fm) {
+      // use created timestamp as id
+      const dt = new Date(fm.attributes.date)
+      const t = dt.getTime()
+
+      // do somethings with front matter
+      // format date
+      const year = dt.getFullYear()
+      const month = dt.getMonth() + 1
+      const day = dt.getDate()
+      fm.attributes.formatedDate = `${year}年 ${month}月 ${day}日`
+      // compute read time
+      const time = Math.round(fm.body.length / 500)
+      const tea = new Array(Math.round(time / 5)).join('☕')
+      fm.attributes.timeToRead = `${tea} 阅读时间${time}分钟`
+
+      // merge new posts object
       state.posts = {
         ...state.posts,
         [t]: fm,
@@ -33,7 +48,7 @@ export default new Vuex.Store({
   actions: {
     [IMPORT_POST_DYNAMIC]({ commit }, post) {
       return import(`./pages/${post}.md`).then(m =>
-        commit(PUSH_POST_FRONT_MATTER_OBJECT, m.default)
+        commit(PUSH_POST_WITH_FRONT_MATTER, m.default)
       )
     },
   },

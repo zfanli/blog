@@ -2,7 +2,8 @@
  * Copy from https://github.com/gaearon/overreacted.io
  * And with some adjustments.
  */
-code[class*='language-'],
+/* code[class*='language-'], */
+code,
 pre[class*='language-'] {
   color: white;
   background: #222;
@@ -59,10 +60,11 @@ pre[class*='language-'] ::selection {
 }
 
 /* Inline code */
-:not(pre) > code[class*='language-'] {
+/* :not(pre) > code[class*='language-'] { */
+:not(pre) > code {
   border-radius: 0.3em;
-  background: rgba(255, 229, 100, 0.2);
-  color: #1a1a1a;
+  background: #333;
+  color: #ffa7c4;
   padding: 0.15em 0.2em 0.05em;
   white-space: normal;
 }

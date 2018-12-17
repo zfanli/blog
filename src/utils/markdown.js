@@ -3,6 +3,7 @@ import taskLists from 'markdown-it-task-lists'
 import { highlight, languages } from 'prismjs'
 
 const md = new Md({
+  html: true,
   highlight: (str, lang) => {
     let code
     if (languages[lang]) {

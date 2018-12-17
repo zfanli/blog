@@ -2,7 +2,7 @@
 title: CSS 的过渡效果和变形（transition & transform）
 subtitle: 过渡动画和变形可以赋予页面生命力。
 date: 2017-10-16 00:00:00
-externalCSSFileName: 2017-10-17-CSS3-transition&transform
+externalCSSFileName: transition-transform
 tags:
   - CSS3
   - 笔记
@@ -165,7 +165,7 @@ linear 中规中矩的过渡；ease 开始和结束稍有缓冲；ease-in 滑动
 
 cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结束(p3)是[1,1]，我们需要设定中间俩个点(p1,p2)的坐标，来得到我们想要的曲线。文字表述不好理解，来看看下面这张图。
 
-<img src="/img/TimingFunction.png" />
+![TimingFunction](/img/TimingFunction.png)
 
 话不多说，看几个常用的例子。鼠标经过查看效果。为了凸显过渡效果的不同点，这里把持续时间设定到了 2 秒，个人认为实际运用在 0.5 秒左右比较合适。
 

@@ -1,6 +1,7 @@
 @import './constants.scss';
 
-.link {
+.link,
+p a {
   text-decoration: none;
   box-shadow: 0 1px 0 0 currentColor;
   color: $font-color;
@@ -8,4 +9,19 @@
   &:hover {
     box-shadow: none;
   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 3.5rem;
+  margin-bottom: 1.75rem;
+}
+
+p {
+  line-height: 1.75rem;
+  margin-bottom: 1.75rem;
 }

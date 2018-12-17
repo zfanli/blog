@@ -9,7 +9,7 @@
       <span>{{ ' • ' }}</span>
       <span>{{ post.attributes.timeToRead }}</span>
     </small>
-    <div v-html="render(post.body)"/>
+    <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <div id="gitalk-container"/>
   </div>
 </template>
@@ -38,25 +38,38 @@ export default {
   },
   watch: {
     post(newPost, oldPost) {
-      if (gitalk) {
-        const newId = new Date(newPost.attributes.date).getTime()
-        const oldId = new Date(oldPost.attributes.date).getTime()
-        if (newId !== oldId) {
+      const newId = new Date(newPost.attributes.date).getTime()
+      const oldId = new Date(oldPost.attributes.date).getTime()
+      if (newId !== oldId) {
+        // update gitalk while route chnaged
+        if (gitalk) {
           document.getElementById('gitalk-container').innerHTML = ''
           gitalk(newId).render('gitalk-container')
+        }
+
+        // update external css if need
+        const externalCSS = this.post.attributes.externalCSS
+        if (externalCSS) {
+          import(/* webpackChunkName: "external-css" */ `../pages/externalCSS/${externalCSS}.scss`)
         }
       }
     },
   },
   mounted() {
+    // initial gitalk
     const id = new Date(this.post.attributes.date).getTime()
-    console.log(id)
     gitalk(id).render('gitalk-container')
+
+    // initial loading external css file if exists
+    const externalCSS = this.post.attributes.externalCSS
+    if (externalCSS) {
+      import(/* webpackChunkName: "external-css" */ `../pages/externalCSS/${externalCSS}.scss`)
+    }
   },
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../styles/theme.css';
 @import '../styles/constants.scss';
 
@@ -78,6 +91,12 @@ export default {
     margin-bottom: 1.75rem;
     display: block;
     line-height: 1.5rem;
+  }
+
+  .c-body {
+    & > div {
+      margin-bottom: 1.75rem;
+    }
   }
 }
 </style>

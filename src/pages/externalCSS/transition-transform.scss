@@ -1,0 +1,220 @@
+.transition-transform {
+  .test-container {
+    height: 100px;
+    width: 400px;
+    overflow: auto;
+    position: relative;
+  }
+  .test-container-big {
+    height: 200px;
+    width: 400px;
+    overflow: auto;
+    position: relative;
+  }
+  .test-container div,
+  .test-container-big div {
+    cursor: pointer;
+  }
+  .contents {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 25px;
+    left: 50px;
+    text-align: center;
+    line-height: 50px;
+  }
+  .two-line {
+    line-height: 25px;
+  }
+
+  /*to mark the sample object*/
+  .test {
+    background-color: darksalmon;
+    transition: all 2s;
+  }
+  /*transition to apply*/
+  .test:hover {
+    background-color: #d694ee;
+    width: 300px;
+  }
+
+  .test-prop {
+    background-color: grey;
+    transition: background-color 1s;
+  }
+  .test-prop:hover {
+    background-color: #269abc;
+    width: 300px;
+  }
+
+  .test-dura-1s {
+    background-color: skyblue;
+    transition: all 1s;
+  }
+  .test-dura-1s:hover {
+    background-color: yellowgreen;
+    width: 300px;
+  }
+  .test-dura-5s {
+    background-color: skyblue;
+    transition: all 5s;
+  }
+  .test-dura-5s:hover {
+    background-color: yellowgreen;
+    width: 300px;
+  }
+
+  .test-linear {
+    background-color: pink;
+    transition: all 2s linear;
+  }
+  .test-linear:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-ease {
+    background-color: pink;
+    transition: all 2s ease;
+  }
+  .test-ease:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-ease-in {
+    background-color: pink;
+    transition: all 2s ease-in;
+  }
+  .test-ease-in:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-ease-out {
+    background-color: pink;
+    transition: all 2s ease-out;
+  }
+  .test-ease-out:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-ease-in-out {
+    background-color: pink;
+    transition: all 2s ease-in-out;
+  }
+  .test-ease-in-out:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-delay-0s {
+    background-color: orangered;
+    transition: all 2s ease;
+    text-align: center;
+  }
+  .test-delay-0s:hover {
+    background-color: blueviolet;
+    width: 300px;
+    color: white;
+  }
+
+  .test-delay-2s {
+    background-color: orangered;
+    transition: all 1s ease 2s;
+  }
+  .test-delay-2s:hover {
+    background-color: blueviolet;
+    width: 300px;
+    color: white;
+  }
+
+  .test-delay-0s {
+    background-color: orangered;
+    transition: all 2s ease;
+  }
+  .test-delay-0s:hover {
+    background-color: blueviolet;
+    width: 300px;
+    color: white;
+  }
+
+  .test-steps {
+    background-color: pink;
+    transition: all 1s steps(5);
+  }
+  .test-steps:hover {
+    background-color: rebeccapurple;
+    width: 300px;
+    color: white;
+  }
+
+  .test-transform {
+    background-color: #398439;
+    top: 100px !important;
+    left: 75px !important;
+    transition: all 1s;
+    transform-origin: 100% 0;
+  }
+  .test-transform:hover {
+    background-color: chartreuse;
+    transform: rotate(360deg) scale(1.5, 1.5) translate(200%, 0);
+  }
+
+  /*transform 展示*/
+  .test-transform-back {
+    background-color: #eceaea;
+    box-shadow: inset 0 0 15px #c3c3c3;
+  }
+  .test-transform-back .fill {
+    width: 50px;
+    height: 50px;
+    background-color: #5bdaff;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+    word-wrap: break-word;
+  }
+  .test-transform-back:hover .fill {
+    transform: rotate(45deg);
+  }
+  .test-transform-back.second {
+    left: 150px !important;
+  }
+  .test-transform-back.second:hover .fill {
+    transform: scale(2);
+  }
+  .test-transform-back.third {
+    left: 250px !important;
+  }
+  .test-transform-back.third:hover .fill {
+    transform: translate(15px, 15px);
+  }
+  .test-container.second .test-transform-back {
+    perspective: 100px;
+  }
+  .test-container.second .test-transform-back:hover .fill {
+    transform: rotateX(45deg);
+  }
+  .test-container.second .test-transform-back.second:hover .fill {
+    transform: rotateY(-45deg);
+  }
+  .test-container.second .test-transform-back.second .fill {
+    transform-origin: 0 100% 0;
+  }
+  .test-container.second .test-transform-back.third:hover .fill {
+    transform: rotate(45deg);
+  }
+  .test-container.second .test-transform-back.third .fill {
+    transform-origin: 0 100% 0;
+  }
+  .height-plus {
+    height: 115px;
+  }
+}

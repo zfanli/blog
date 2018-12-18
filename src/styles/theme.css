@@ -65,7 +65,8 @@ pre[class*='language-'] ::selection {
   border-radius: 0.3em;
   background: #333;
   color: #ffa7c4;
-  padding: 0.15em 0.2em 0.05em;
+  padding: 0.15rem 0.2rem 0.05rem;
+  margin: 0 0.2rem;
   white-space: normal;
 }
 

@@ -4,7 +4,20 @@ module.exports = {
     [
       'prismjs',
       {
-        languages: ['javascript', 'css', 'markup', 'java', 'python'],
+        languages: [
+          'javascript',
+          'jsx',
+          'tsx',
+          'json',
+          'yaml',
+          'http',
+          'css',
+          'scss',
+          'markup',
+          'java',
+          'python',
+          'bash',
+        ],
         // plugins: ['toolbar', 'show-language', 'line-highlight'],
         css: true,
       },

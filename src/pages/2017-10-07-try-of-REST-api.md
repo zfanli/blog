@@ -281,12 +281,21 @@ $.ajax({
 
 我们的请求还有一个查询参数，告诉服务器我们要查找 id 为 10013 的 target 资源。`dataType`属性告诉服务器我们接收 JSON 格式的资源。这符合我们的 api 规范，很好，服务器响应了，并且将需要的资源发送给了我们。我在 ajax 的回调函数里面把服务器响应的资源写到了 body 上，所以我们可以看到画面上显示了下面的信息。
 
-> {"id":10013,"realName":null,"nickName":"nan","age":31,"password":"asd24698"}
+```json
+{
+  "id": 10013,
+  "realName": null,
+  "nickName": "nan",
+  "age": 31,
+  "password": "asd24698"
+}
+```
 
 很好，成功了，数据和我们数据库的一致。我们再来看看请求和响应的信息。
 
-```text
-// Request header
+Request header:
+
+```http
 GET /target?id=10013 HTTP/1.1
 Host: 10.0.0.26:8443
 Connection: keep-alive
@@ -297,8 +306,11 @@ Referer: https://10.0.0.26:8443/
 Accept-Encoding: gzip, deflate, br
 Accept-Language: zh-CN,zh;q=0.8
 Cookie: (too long so let's omit it)
+```
 
-// Response header
+Response header:
+
+```http
 HTTP/1.1 200
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -329,12 +341,15 @@ $.ajax({
 
 执行代码，我们得到了下面的结果。
 
-> {"message":"Not Found.","id":5}
+```json
+{ "message": "Not Found.", "id": 5 }
+```
 
 这和我定义的错误信息一致。我们继续看一下 header 信息。
 
-```text
-// Request header
+Request header:
+
+```http
 GET /target?id=10013 HTTP/1.1
 Host: 10.0.0.26:8443
 Connection: keep-alive
@@ -345,8 +360,11 @@ Referer: https://10.0.0.26:8443/
 Accept-Encoding: gzip, deflate, br
 Accept-Language: zh-CN,zh;q=0.8
 Cookie: (too long so let's omit it)
+```
 
-// Response header
+Response header:
+
+```http
 HTTP/1.1 404
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -434,12 +452,21 @@ $.ajax({
 
 这里我们定义 beforeSend 使其在请求发送之前将 token 装入 header 中。我们使用正则表达式从 cookies 中匹配出 token。我们用 contentType 属性告诉服务器我们发送的数据的格式。这里有一点要注意，发送的 JSON 格式数据要求严格格式，我们需要使用`JSON.stringify()`方法格式化一下我们的 JSON 对象，否则将出现错误。和之前一样，如果成功我们将结果写入 body 来验证。我们看到了下面的结果。
 
-> {"id":10014,"realName":null,"nickName":"API_USER_TEST","age":99,"password":"THIS_IS_CREATE_BY_API_TEST"}
+```json
+{
+  "id": 10014,
+  "realName": null,
+  "nickName": "API_USER_TEST",
+  "age": 99,
+  "password": "THIS_IS_CREATE_BY_API_TEST"
+}
+```
 
 我们成功了，再看一下 header 信息。
 
-```text
-// Request header
+Request header:
+
+```http
 POST /target HTTP/1.1
 Host: 10.0.0.26:8443
 Connection: keep-alive
@@ -454,8 +481,11 @@ Referer: https://10.0.0.26:8443/
 Accept-Encoding: gzip, deflate, br
 Accept-Language: zh-CN,zh;q=0.8
 Cookie: (too long so let's omit it)
+```
 
-// Response header
+Response header:
+
+```http
 HTTP/1.1 201
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block

@@ -82,8 +82,10 @@ export default {
   }
 
   .c-title {
+    margin: 0;
     margin-top: 2rem;
     font-weight: 900;
+
     // font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Yuanti SC', sans-serif;
   }
 

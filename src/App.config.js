@@ -7,6 +7,10 @@ export default {
     bio: '我会不定期地记录一些笔记和总结。',
     avatar: '', // path to avatar image
     username: 'zfanli', // username of github
+    social: { // for generate social link in footer
+      weibo: 'https://weibo.com/210100026',
+      github: 'https://github.com/zfanli',
+    },
   },
   config: {
     ga: {

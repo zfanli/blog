@@ -34,6 +34,10 @@ export default {
     bio: 'your bio',
     avatar, // path to avatar
     username: 'username of github for make a link',
+    social: { // for generate social link in footer
+      github: 'https://github.com/(your username here)',
+      others: 'link/to/others/social/site',
+    },
   },
   config: {
     // delete this block to disable ga

@@ -10,15 +10,47 @@
       <span>{{ post.attributes.timeToRead }}</span>
     </small>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
+    <hr>
+    <div class="head bottom">
+      <home-link :title="title"/>
+    </div>
+    <div class="intro">
+      <blog-avatar class="intro-avatar" :src="avatar"/>
+      <div class="intro-body">
+        <div class="intro-name">
+          这是
+          <a
+            class="intro-link link"
+            :href="`https://github.com/${username}`"
+            target="_blank"
+          >{{ name }}</a>
+          的个人博客，
+        </div>
+        <div class="intro-bio">{{ bio }}</div>
+      </div>
+    </div>
+    <div class="other-posts">
+      <router-link
+        class="link"
+        v-if="otherPosts.previous"
+        :to="`/post/${otherPosts.previous}`"
+      >← {{ otherPosts.previous }}</router-link>
+      <router-link
+        class="link"
+        v-if="otherPosts.next"
+        :to="`/post/${otherPosts.next}`"
+      >{{ otherPosts.next }} →</router-link>
+    </div>
     <div id="gitalk-container"/>
   </div>
 </template>
 
 <script>
 import HomeLink from '@/components/HomeLink.vue'
+import BlogAvatar from '@/components/BlogAvatar.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -26,11 +58,29 @@ export default {
   },
   components: {
     HomeLink,
+    BlogAvatar,
   },
   computed: {
-    ...mapState(['title']),
+    ...mapState(['title', 'name', 'bio', 'avatar', 'username']),
+    ...mapGetters(['postIds', 'postList']),
     post() {
       return this.$store.getters.getPostByTitle(this.postTitle)
+    },
+    otherPosts() {
+      // get id
+      const id = new Date(this.post.attributes.date).getTime()
+      // get current index
+      const index = this.postIds.indexOf(String(id))
+      // get max length
+      const maxLength = this.postIds.length
+      // get previous post if exists
+      const previous = index - 1 < 0 ? null : this.postList[index - 1]
+      // get next post if exists
+      const next = index + 1 > maxLength - 1 ? null : this.postList[index + 1]
+      return {
+        previous: !previous ? null : previous.attributes.title,
+        next: !next ? null : next.attributes.title,
+      }
     },
   },
   methods: {
@@ -98,6 +148,32 @@ export default {
   .c-body {
     & > div {
       margin-bottom: 1.75rem;
+    }
+  }
+
+  .other-posts {
+    .link {
+      display: block;
+      width: fit-content;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .head.bottom {
+    margin-bottom: 2rem;
+  }
+
+  .intro {
+    text-align: left;
+    display: flex;
+    margin-bottom: 4.5rem;
+
+    .intro-avatar {
+      margin-right: 0.875rem;
+    }
+
+    .intro-body {
+      line-height: 1.75rem;
     }
   }
 }

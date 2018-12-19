@@ -1,5 +1,11 @@
 @import './constants.scss';
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .link,
 p a {
   text-decoration: none;
@@ -23,8 +29,23 @@ h3,
 h4,
 h5,
 h6 {
+  margin-bottom: $common-margin-button;
   margin-top: 3.5rem;
-  margin-bottom: 1.75rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 900;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 900;
 }
 
 blockquote,
@@ -36,7 +57,7 @@ table,
 hr {
   line-height: 1.75rem;
   margin-top: 0;
-  margin-bottom: 1.75rem;
+  margin-bottom: $common-margin-button;
 }
 
 blockquote {
@@ -100,7 +121,6 @@ ul,
 ol {
   padding-left: 0;
   margin-top: 0;
-  margin-bottom: 0;
   padding-left: 1.75rem;
 }
 
@@ -127,4 +147,8 @@ hr {
   border: 0 none;
   color: #ccc;
   height: 4px;
+}
+
+small {
+  font-size: 80%;
 }

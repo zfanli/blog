@@ -13,7 +13,7 @@ export default new Vuex.Store({
   getters: {
     postIds(state) {
       // sort by keys desc
-      return Object.keys(state.posts).sort((a, b) => a - b > 0)
+      return Object.keys(state.posts).sort((a, b) => b - a)
     },
     postList(state, getters) {
       return getters.postIds.map(id => state.posts[id])
@@ -26,7 +26,6 @@ export default new Vuex.Store({
     [PUSH_POST_WITH_FRONT_MATTER](state, fm) {
       // use created timestamp as id
       const dt = new Date(fm.attributes.date)
-      const t = dt.getTime()
 
       // do somethings with front matter
       // format date
@@ -36,13 +35,13 @@ export default new Vuex.Store({
       fm.attributes.formatedDate = `${year}年 ${month}月 ${day}日`
       // compute read time
       const time = Math.round(fm.body.length / 500)
-      const tea = new Array(Math.round(time / 5)).join('☕')
+      const tea = new Array(Math.round(time / 6) + 1).join('☕')
       fm.attributes.timeToRead = `${tea} 阅读时间${time}分钟`
 
       // merge new posts object
       state.posts = {
         ...state.posts,
-        [t]: fm,
+        [dt.getTime()]: fm,
       }
     },
   },

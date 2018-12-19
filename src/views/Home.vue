@@ -27,6 +27,12 @@
       </small>
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
     </div>
+    <footer class="footer">
+      <div class="footer-link" v-for="(k, i) in Object.keys(social)" :key="k">
+        <a class="link" :href="social[k]">{{ k }}</a>
+        <span v-if="i + 1 !== Object.keys(social).length" class="link-separator">•</span>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -39,7 +45,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   name: 'home',
   computed: {
-    ...mapState(['title', 'name', 'bio', 'avatar', 'username']),
+    ...mapState(['title', 'name', 'bio', 'avatar', 'username', 'social']),
     ...mapGetters(['postList']),
   },
   components: {
@@ -95,6 +101,21 @@ export default {
 
     .post-subtitle {
       line-height: 1.5rem;
+    }
+  }
+
+  .footer {
+    text-align: left;
+    margin-top: 4.375rem;
+    padding-top: 1.75rem;
+
+    .footer-link {
+      display: inline-block;
+
+      .link-separator {
+        padding: 0 0.4rem;
+        font-size: .5rem;
+      }
     }
   }
 }

@@ -7,9 +7,9 @@ tags:
   - spring
 ---
 
-### Spring MVC 笔记
+最近阅读《Spring in Action》一书来学习和练习 spring 框架的使用。对学习中遇到对一些问题以及解决对方法做一些笔记。
 
-使用《Spring in Action》一书学习和练习 spring 框架的使用。为记录在学习中遇到的问题和解决，也为方便记忆留下笔记。
+---
 
 ### Spring MVC 配置
 

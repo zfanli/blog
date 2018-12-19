@@ -6,55 +6,39 @@ tags:
   - CSS
 ---
 
-### 关于 Bootstrap 4.0
+时隔几个月，再次回顾 Bootstrap 的文档。由于之前我看过 3.0 版本的文档，对用法还有个大致印象。这次因为要构建 UI，使用 Bootstrap 比较方便，所以打算再熟悉一下，没想到 4.0 版本已经正式发布了，索性看看 4.0 版本较之前版本有些什么变化。
+
+看到目前为止，4.0 是基于 CSS3 新的 Flexbox 属性进行布局对，较之前 div 盒子相比更加方便，而且很多之前需要 hack 的方法才能解决的布局痛点现在基本都有了完美解决方案。
+
+这篇文章是我查阅资料时对 Flexbox 的概念和使用方法做的一些笔记和总结，以方便日后回顾。
 
 ---
 
-时隔几个月，又看起了 Bootstrap 的文档。
+### 参考文档
 
-上次 4.0 版本还在测试中，我看了 3.0 版本的文档。对用法还有个大致印象。
+Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background)。
 
-这次又要用到它构建 UI，而且基于 Flexbox 的 4.0 正式版本已经 Release 了，所以这次当然选择 Bootstrap4.0。
+这是一篇很全面的文章，全英文可能不是很好理解。
 
-看到目前，4.0 基于 Flexbox 更方便，很多之前需要 hack 的问题现在都可以无痛解决了。
-
-这篇文章相当于我看 Flexbox 文档的一份笔记。大致记一下用法。
-
-### 参照文档
-
----
-
-Bootstrap 官方推荐的文档是[A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background)。
-
-很全面，就是全英文。大致浏览一遍之后，转头读汉化版文档去了。
-
-（真的是，为了读一篇文档，延伸出好多需要读的文档呀。）
-
-于是找到一篇挺好的中文译文。原文不是上面那篇。
+一番搜索之下找到一篇优质的有中文译文的文章。下面是原文的链接。感谢作者 Ohans Emmanuel 的分享。
 
 [Understanding Flexbox: Everything you need to know](https://medium.freecodecamp.org/understanding-flexbox-everything-you-need-to-know-b4013d4dc9af)
 
-感谢作者 Ohans Emmanuel 的分享。英文还是吃力。好在有译文。
+下面是来自大漠的译文。这篇文章足以让我们对 Flexbox 的概念和用法有一个全面的了解。
 
 [理解 Flexbox：你需要知道的一切](https://www.w3cplus.com/css3/understanding-flexbox-everything-you-need-to-know.html)
 
-来自大漠的译文。
-
-上面的文档足以对 Flexbox 的工作有全面的了解。
-
-下面是一些备忘笔记。
+---
 
 ### 速记
 
----
-
-直接正文。
+关键点的笔记。
 
 **如何声明 Flexbox？**
 
-给 Container 元素加`display: flex`或`diaplay: inline-flex`属性即声明这个元素启动了 Flexbox 布局。
+给 Container 元素添加 CSS 属性 `display: flex` 或 `display: inline-flex`，即声明这个元素启动 Flexbox 布局。
 
-这个 Container 内的所有后代元素都处于 Flexbox 布局中。
+这个 Container 内的所有直属后代元素都处于 Flexbox 布局中。
 
 这个父容器 Container 称作 Flex Container。
 
@@ -62,7 +46,10 @@ Bootstrap 官方推荐的文档是[A Complete Guide to Flexbox](https://css-tric
 
 **Flex Container 的属性有哪些？**
 
-> flex-direction \|\| flex-wrap \|\| flex-flow \|\| justify-content \|\| align-items \|\| align-content
+```
+    flex-direction  || flex-wrap    || flex-flow
+ || justify-content || align-items  || align-content
+```
 
 **flex-direction**
 
@@ -70,8 +57,9 @@ Bootstrap 官方推荐的文档是[A Complete Guide to Flexbox](https://css-tric
 
 以下是可选值。
 
-row | column | row-reverse | column-reverse
-水平 | 垂直 | 反向水平（自右向左） | 反向垂直（自下向上）
+| row  | column | row-reverse          | column-reverse       |
+| ---- | ------ | -------------------- | -------------------- |
+| 水平 | 垂直   | 反向水平（自右向左） | 反向垂直（自下向上） |
 
 **flex-wrap**
 
@@ -79,8 +67,9 @@ row | column | row-reverse | column-reverse
 
 以下是可选值。
 
-wrap | nowrap | wrap-reverse
-换行 | 不换行 | 换行（向上堆砌）
+| wrap | nowrap | wrap-reverse     |
+| ---- | ------ | ---------------- |
+| 换行 | 不换行 | 换行（向上堆砌） |
 
 **flex-flow**
 
@@ -88,7 +77,9 @@ flex-flow 是上面两个属性的速记属性。
 
 用例如下。
 
-> flex-flow: row wrap;
+```css
+flex-flow: row wrap;
+```
 
 **justify-content**
 
@@ -98,8 +89,9 @@ flex-flow 是上面两个属性的速记属性。
 
 以下是可选值。
 
-flex-start | flex-end | center | space-between | space-around
-居左（垂直时居上） | 居右（垂直时居下） | 居中 | 项目等间距隔开（最左及最右无间距） | 项目左右等间距隔开
+| flex-start         | flex-end           | center | space-between                      | space-around       |
+| ------------------ | ------------------ | ------ | ---------------------------------- | ------------------ |
+| 居左（垂直时居上） | 居右（垂直时居下） | 居中   | 项目等间距隔开（最左及最右无间距） | 项目左右等间距隔开 |
 
 **align-items**
 
@@ -107,8 +99,9 @@ Cross-Axis 上的调整。`row`表示时调整垂直方向，`column`表示时�
 
 以下是可选值。默认值是`stretch`，拉伸。
 
-flex-start | flex-end | center | stretch | baseline
-居上（居左） | 居下（居右） | 居中 | 伸展 | 基线（第一行）
+| flex-start   | flex-end     | center | stretch | baseline       |
+| ------------ | ------------ | ------ | ------- | -------------- |
+| 居上（居左） | 居下（居右） | 居中   | 伸展    | 基线（第一行） |
 
 **align-content**
 
@@ -118,7 +111,9 @@ flex-start | flex-end | center | stretch | baseline
 
 **Flex 项目的属性呢？**
 
-> order \|\| flex-grow \|\| flex-shrink \|\| flex-basis
+```
+ order || flex-grow || flex-shrink || flex-basis
+```
 
 Flex 项目有一些神奇的属性。
 
@@ -152,7 +147,9 @@ Flex 项目有一些神奇的属性。
 
 使用`flex-basis`可以固定项目的宽度。
 
-> flex-basis： 150px；
+```css
+flex-basis： 150px；
+```
 
 上面三个属性有一个速记方法。
 
@@ -160,15 +157,25 @@ Flex 项目有一些神奇的属性。
 
 用例。
 
-> flex: 0 1 auto;
+```css
+flex: 0 1 auto;
+```
 
 记住**GSB**。第一个值是 grow，第二个是 shrink，最后一个是 bisis。
 
 有一些组合。
 
-> flex: none; -> flex: 0 0 auto;
+```css
+flex: none;
+/* 等同于 */
+flex: 0 0 auto;
+```
 
-> flex: auto; -> flex: 1 1 auto;
+```css
+flex: auto;
+/* 等同于 */
+flex: 1 1 auto;
+```
 
 **子项目还有一些额外的属性！**
 
@@ -177,8 +184,6 @@ Flex 项目有一些神奇的属性。
 效果和父元素的`align-items`完全一致。唯一的区别就是，对子元素设置该属性可以单独调整这个元素的对齐方式，**而不影响到其他元素**！
 
 ### margin: auto
-
----
 
 之前我们使用`margin: auto`来让一个块状元素居中显示。但是在这里它可能会出错。因为实现它的原理是将剩余的空间均匀分配到元素的两边。
 
@@ -191,8 +196,6 @@ Flex 项目有一些神奇的属性。
 （有空补效果。）
 
 ### 总结
-
----
 
 我们从声明 Flexbox 布局方式开始介绍了 Flex 容器和子项目。
 

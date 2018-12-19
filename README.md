@@ -62,7 +62,7 @@ Front matter of post file.
 ---
 title: title of post # *required
 subtitle: some descriptions about this post # *required
-date: 2018-12-16 00:00:00 # *required
+date: 2018-12-16 00:00:00 +0800 # *required, time zone is optional
 externalCSS: file name of external CSS if need # optional
 tags: # optional
   - tags list

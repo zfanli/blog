@@ -8,7 +8,7 @@ tags:
 
 时隔几个月，再次回顾 Bootstrap 的文档。由于之前我看过 3.0 版本的文档，对用法还有个大致印象。这次因为要构建 UI，使用 Bootstrap 比较方便，所以打算再熟悉一下，没想到 4.0 版本已经正式发布了，索性看看 4.0 版本较之前版本有些什么变化。
 
-看到目前为止，4.0 是基于 CSS3 新的 Flexbox 属性进行布局对，较之前 div 盒子相比更加方便，而且很多之前需要 hack 的方法才能解决的布局痛点现在基本都有了完美解决方案。
+看到目前为止，4.0 是基于 CSS3 新的 Flexbox 属性进行布局的，较之前的 div 盒子相比更加方便，而且很多之前需要 hack 的方法才能解决的布局痛点现在基本都有了完美解决方案。
 
 这篇文章是我查阅资料时对 Flexbox 的概念和使用方法做的一些笔记和总结，以方便日后回顾。
 
@@ -36,7 +36,17 @@ Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tri
 
 **如何声明 Flexbox？**
 
-给 Container 元素添加 CSS 属性 `display: flex` 或 `display: inline-flex`，即声明这个元素启动 Flexbox 布局。
+给 Container 元素添加 CSS 属性 `display: flex` 或 `display: inline-flex`，即声明这个元素启动 Flexbox 布局。`inline-flex` 指对元素内进行 `flex` 布局，对元素外是 `inline` 布局。
+
+```css
+.container {
+  display: flex;
+}
+/* 或者 */
+.container {
+  display: inline-flex;
+}
+```
 
 这个 Container 内的所有直属后代元素都处于 Flexbox 布局中。
 
@@ -55,6 +65,13 @@ Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tri
 
 父容器设定 flex-direction 属性来规定其子元素的排列方式。默认是`row`，即水平排列。
 
+```css
+.container {
+  display: flex;
+  flex-direction: row;
+}
+```
+
 以下是可选值。
 
 | row  | column | row-reverse          | column-reverse       |
@@ -64,6 +81,13 @@ Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tri
 **flex-wrap**
 
 是否允许换行。默认是`nowrap`，不换行。
+
+```css
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+}
+```
 
 以下是可选值。
 
@@ -78,14 +102,36 @@ flex-flow 是上面两个属性的速记属性。
 用例如下。
 
 ```css
-flex-flow: row wrap;
+.container {
+  display: flex;
+  flex-flow: row wrap;
+}
 ```
 
 **justify-content**
 
 基于行的对齐方式，类似于`align-text`属性。
 
+```css
+.container {
+  display: flex;
+  /* 此时 flex-direction 默认为 row（行）  */
+  /* 控制水平方向的对齐方式 */
+  justify-content: flex-start;
+}
+```
+
 > 注意！`justify-content`属性的作用对象是 Main-Axis。而 Main-Axis 在`Flex-direction`属性不同的情况下表现的行为不同。记住它的调整参照是 Main-Axis，在`row`方向的情况是对行的排列方式进行调整，而在`column`方向时调整的是垂直的列。之后介绍的`align-items`属性也是一样的。
+
+```css
+.container {
+  display: flex;
+  flex-direction: column;
+  /* 由于 flex-direction 为 column（列） */
+  /* 此时 justify-content 控制垂直方向的对齐方式 */
+  justify-content: flex-start;
+}
+```
 
 以下是可选值。
 
@@ -97,6 +143,25 @@ flex-flow: row wrap;
 
 Cross-Axis 上的调整。`row`表示时调整垂直方向，`column`表示时调整水平方向。
 
+```css
+.container {
+  display: flex;
+  /* 此时 flex-direction 默认为 row（行）  */
+  /* 控制垂直方向的对齐方式 */
+  align-items: flex-start;
+}
+```
+
+```css
+.container {
+  display: flex;
+  flex-direction: column;
+  /* 由于 flex-direction 为 column（列） */
+  /* 此时 align-items 控制水平方向的对齐方式 */
+  align-items: flex-start;
+}
+```
+
 以下是可选值。默认值是`stretch`，拉伸。
 
 | flex-start   | flex-end     | center | stretch | baseline       |
@@ -107,7 +172,14 @@ Cross-Axis 上的调整。`row`表示时调整垂直方向，`column`表示时�
 
 效果和上面的属性一致，但是作用对象是多行的 Flex 容器，换句话说是 Flex 整体的调整。
 
-上面就是容器的属性。
+```css
+.container {
+  display: flex;
+  align-content: flex-start;
+}
+```
+
+上面是所有的容器的属性。针对一个容器内的所有子元素起效。
 
 **Flex 项目的属性呢？**
 
@@ -115,40 +187,82 @@ Cross-Axis 上的调整。`row`表示时调整垂直方向，`column`表示时�
  order || flex-grow || flex-shrink || flex-basis
 ```
 
-Flex 项目有一些神奇的属性。
+Flex 项目有一些神奇的属性。这些属性只对该元素本身起作用。
 
 **order**
 
-不修改 HTML 源代码的情况下，修改项目显示的顺序。默认值为`0`。
+不修改 HTML 源代码的情况下，修改项目显示的顺序。默认值为 `0`。
 
-该属性接收数值参数，根据数值大小做出调整，可以想象`z-index`的模式。
+该属性接收数值参数，根据数值大小做出调整，可以想象 `z-index` 的模式。
 
-通常情况下，不设置`order`属性时，所有项目的`order`默认为 0，画面将按照 HTML 结构从上到下渲染显示。
+通常情况下，不设置 `order` 属性时，所有项目的 `order` 默认为 0，画面将按照 HTML 结构从上到下渲染显示。
 
-但是存在`order`属性的情况下，画面显示时将先考虑`order`值的大小做出判断，值越靠前则显示越靠前。在`order`值相等的情况下，按照 HTML 结构上下顺序优先显示先解析的。
+但是存在 `order` 属性的情况下，画面显示时将先考虑 `order` 值的大小做出判断，值越靠前则显示越靠前。在 `order` 值相等的情况下，按照 HTML 结构上下顺序优先显示先解析的。
+
+```html
+<div class="b">Class b</div>
+<div class="a">Class a</div>
+<div class="c">Class c</div>
+```
+
+```css
+.a {
+  order: 1;
+}
+.b {
+  order: 2;
+}
+.c {
+  order: 2;
+}
+```
+
+// TODO 效果展示
 
 **flex-grow & flex-shrink & flex-basis**
 
 这三个可以一起说了。
 
-`flex-grow`的默认值为`0`，表示默认不会填充满宽度（`row`显示时）。
+`flex-grow` 的默认值为 `0`，表示默认不会填充满宽度（`row` 显示时）。
 
-`flex-grow`接收数值作为参数，数值的大小具有意义。当一行存在多个项目时，同时开启`flex-grow`属性时，这些项目将根据该属性的值分配宽度。
+`flex-grow` 接收数值作为参数，数值的大小具有意义。当一行存在多个项目时，同时开启 `flex-grow` 属性时，这些项目将根据该属性的值分配宽度。
 
-例如一行存在两个 DIV，A 和 B，A 的`flex-grow`值为 2，B 为 1。
+例如一行存在两个 DIV，A 和 B，A 的 `flex-grow` 值为 2，B 为 1。
 
 则在显示时宽度一分为三，三分之二宽度分配个 A，剩下三分之一分配给 B。
 
-（速记，若有时间补上 CSS 示例。）
-
-`flex-shrink`接收数值作为参数，但是数值仅作为开关。默认为`1`，开启收缩。此时当宽度较小时会收缩子元素的宽度来保证完全显示所有元素。
-
-`flex-basis`指定项目的初始大小。取值可以有各种单位，`px`或`%`等。但是注意即使值是`0`也要写上单位，如`0px`。它的默认值是`auto`。这时项目的宽度根据内容的长度计算。
-
-使用`flex-basis`可以固定项目的宽度。
+```html
+<div class="a">Class a</div>
+<div class="b">Class b</div>
+```
 
 ```css
-flex-basis： 150px；
+.a {
+  flex-grow: 2;
+}
+.b {
+  flex-grow: 1;
+}
+```
+
+// TODO 效果展示
+
+`flex-shrink` 接收数值作为参数，但是数值仅作为开关。默认为 `1`，开启收缩。此时当宽度较小时会收缩子元素的宽度来保证完全显示所有元素。当其值为 `0` 时，宽度不会自动适应，即使宽度超过容器最大宽度。
+
+```css
+.a {
+  flex-shrink: 1;
+}
+```
+
+`flex-basis` 指定项目的初始大小。取值可以有各种单位，`px` 或 `%` 等。但是注意即使值是 `0` 也要写上单位，如 `0px`。它的默认值是 `auto`。这时项目的宽度根据内容的长度计算。
+
+使用 `flex-basis` 可以固定项目的宽度。
+
+```css
+.a {
+  flex-basis： 150px；
+}
 ```
 
 上面三个属性有一个速记方法。
@@ -158,30 +272,42 @@ flex-basis： 150px；
 用例。
 
 ```css
-flex: 0 1 auto;
+.a {
+  flex: 0 1 auto;
+}
 ```
 
-记住**GSB**。第一个值是 grow，第二个是 shrink，最后一个是 bisis。
+记住**GSB**。第一个值是 grow，第二个是 shrink，最后一个是 basis。
 
 有一些组合。
 
 ```css
-flex: none;
-/* 等同于 */
-flex: 0 0 auto;
+.a {
+  flex: none;
+  /* 等同于 */
+  flex: 0 0 auto;
+}
 ```
 
 ```css
-flex: auto;
-/* 等同于 */
-flex: 1 1 auto;
+.a {
+  flex: auto;
+  /* 等同于 */
+  flex: 1 1 auto;
+}
 ```
 
 **子项目还有一些额外的属性！**
 
 **align-self**
 
-效果和父元素的`align-items`完全一致。唯一的区别就是，对子元素设置该属性可以单独调整这个元素的对齐方式，**而不影响到其他元素**！
+效果和父元素的 `align-items` 完全一致。唯一的区别就是，对子元素设置该属性可以单独调整这个元素的对齐方式，**而不影响到其他元素**！
+
+```css
+.a {
+  align-self: flex-start;
+}
+```
 
 ### margin: auto
 
@@ -193,7 +319,7 @@ flex: 1 1 auto;
 
 **但是要注意，使用了`margin: auto`进行自动对齐的话，`justify-content`将不再起作用！**
 
-（有空补效果。）
+// TODO 效果展示
 
 ### 总结
 
@@ -201,28 +327,26 @@ flex: 1 1 auto;
 
 对于 Flex 容器我们分别介绍了：
 
-1. 控制子元素水平或垂直分布的`flex-direction`属性，
-2. 控制子元素能否换行的`flex-wrap`属性，
-3. 前两个属性的速写`flex-flow`属性，
-4. 针对 Main-Axis 上对子元素进行排列调整的`justify-content`属性，
-5. 在 Cross-Axis 上进行排列调整的`align-items`属性，
-6. 以及对多行元素整体调整位置的`align-content`属性。
+1. 控制子元素水平或垂直分布的 `flex-direction` 属性，
+2. 控制子元素能否换行的 `flex-wrap` 属性，
+3. 前两个属性的速写 `flex-flow` 属性，
+4. 针对 Main-Axis 上对子元素进行排列调整的 `justify-content` 属性，
+5. 在 Cross-Axis 上进行排列调整的 `align-items` 属性，
+6. 以及对多行元素整体调整位置的 `align-content` 属性。
 
 而针对 Flex 子项目我们介绍了：
 
-1. 控制子项目显示顺序的`order`属性，
-2. 控制子元素在有剩余空间的情况下进行拉伸的`flex-grow`属性，
-3. 控制子元素在宽度变小的情况下是否收缩的`flex-shrink`属性，
-4. 以及指定子元素初始宽度的`flex-basis`属性。
-5. 最后这三个属性可以用`flex`属性速记，要记住**GSB**，即`Grow -> Shrink -> Basis`。
+1. 控制子项目显示顺序的 `order` 属性，
+2. 控制子元素在有剩余空间的情况下进行拉伸的 `flex-grow` 属性，
+3. 控制子元素在宽度变小的情况下是否收缩的 `flex-shrink` 属性，
+4. 以及指定子元素初始宽度的 `flex-basis` 属性。
+5. 最后这三个属性可以用 `flex` 属性速记，要记住**GSB**，即 `Grow -> Shrink -> Basis`。
 
 我们还介绍了：
 
-1. 可以控制指定子项目在 Cross-Axis 上对齐位置的`align-self`属性
-2. 和技巧运用`margin: auto`来获得剩余空间，使指定项目和其他项目孤立开的布局。
+1. 可以控制指定子项目在 Cross-Axis 上对齐位置的 `align-self` 属性
+2. 和技巧运用 `margin: auto` 来获得剩余空间，使指定项目和其他项目孤立开的布局。
 
-但是使用`margin: auto`时我们的`justify-content`属性就不再起作用了。
+但是使用 `margin: auto` 时我们的 `justify-content` 属性就不再起作用了。
 
-本文只是一个速记，在之后的某段时间用来加深印象和认识。本文开篇也给出了详细介绍 Flexbox 布局的两篇文章，以待需要时可以定位查阅。
-
-以上。
+这篇文字是一篇笔记，以方便日后回顾和加深印象。在开篇有两篇优质的文章可以在需要的时候参考。

@@ -4,8 +4,7 @@ subtitle: 过渡动画和变形可以赋予页面生命力。
 date: 2017-10-16 00:00:00 +0800
 externalCSS: transition-transform
 tags:
-  - CSS3
-  - 笔记
+  - CSS
 ---
 
 ### transition 过渡效果

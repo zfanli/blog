@@ -61,7 +61,6 @@ export default {
 
 <style lang="scss">
 @import '@/styles/constants.scss';
-@import '@/styles/font.scss';
 
 .home {
   .head {

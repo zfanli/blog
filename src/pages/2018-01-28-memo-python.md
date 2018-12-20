@@ -82,7 +82,7 @@ Python 的真正强大之处在于功能强大的各种第三方类库。
 
 例如要生成下面这个可交互的 SVG 图表的话，仅需要几行代码就可实现。
 
-<embed src="/img/dot_chart.svg" type="image/svg+xml" />
+<embed src="/img/python-svg/dot_chart.svg" type="image/svg+xml" />
 
 代码实现如下：
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
 下面再贴一张图表吧。
 
-<embed src="/img/post-img/svg/half_solid_gauge_chart.svg" />
+<embed src="/img/python-svg/half_solid_gauge_chart.svg" />
 
 酷炫吧？
 

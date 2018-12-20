@@ -1,8 +1,8 @@
 ---
 title: CSS3 布局神器 - Flexbox
 subtitle: Flexbox 为我们提供了一种新的、灵活的布局方式。
-date: 2018-02-08 21:12:06 +0800
-lastUpdateTime: 2018-12-20 13:01:37 +0800
+date: 2018-02-08 21:12:06 +8
+lastUpdateTime: 2018-12-20 13:01:37 +8
 tags:
   - CSS
 ---

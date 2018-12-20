@@ -1,7 +1,7 @@
 ---
 title: 关于 Spring 框架的一些笔记
 subtitle: 学习 Spring MVC，DI，AOP 等相关知识的笔记。
-date: 2017-9-10 08:03:51 +0800
+date: 2017-9-10 08:03:51 +8
 tags:
   - java
   - spring

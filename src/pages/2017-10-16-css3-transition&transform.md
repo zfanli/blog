@@ -1,7 +1,7 @@
 ---
 title: CSS 的过渡效果和变形（transition & transform）
 subtitle: 过渡动画和变形可以赋予页面生命力。
-date: 2017-10-16 00:00:00 +0800
+date: 2017-10-16 00:00:00 +8
 externalCSS: transition-transform
 tags:
   - CSS

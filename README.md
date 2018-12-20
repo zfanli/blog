@@ -66,9 +66,9 @@ Front matter of post file.
 ---
 title: title of post # *required
 subtitle: some descriptions about this post # *required
-date: 2018-12-16 00:00:00 +0800 # *required, time zone is optional
+date: 2018-12-16 00:00:00 +8 # *required, time zone is optional
 # NOTICE: `date` is used as unique id to initial comment issue by gitalk, so DO NOT change it after comment issue was created! Otherwise new issue will be created.
-lastUpdateTime: 2018-12-20 13:01:37 +0800 # *optional, show at post page if exists
+lastUpdateTime: 2018-12-20 13:01:37 +8 # *optional, show at post page if exists
 externalCSS: file name of external CSS if need # optional
 tags: # optional, show at homepage if exists
   - tags list

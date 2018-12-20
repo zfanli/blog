@@ -1,8 +1,8 @@
 ---
 title: 从需求来看 MongoDB 的最简单用法
 subtitle: 从需求来看看目前最流行的 NoSQL 数据库 MongoDB 的最简单用法，基于 Python。
-date: 2018-06-05 10:56:06 +0800
-lastUpdateTime: 2018-06-16 12:39:37 +0800
+date: 2018-06-05 10:56:06 +8
+lastUpdateTime: 2018-06-16 12:39:37 +8
 tags:
   - Python
   - MongoDB

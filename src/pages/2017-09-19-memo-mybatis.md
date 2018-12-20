@@ -1,7 +1,7 @@
 ---
 title: 关于 Mybatis 的笔记
 subtitle: 问题与解决，研究与笔记。
-date: 2017-9-19 22:17:13 +0800
+date: 2017-9-19 22:17:13 +8
 tags:
   - java
   - mybatis

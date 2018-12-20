@@ -1,7 +1,7 @@
 ---
 title: RESTful API 的一个尝试
 subtitle: 设计一个 RESTful API，在 Java 的 Spring MVC 中实现它，最后在前端使用 ajax 验证它。
-date: 2017-10-7 13:07:00 +0800
+date: 2017-10-7 13:07:00 +8
 tags:
   - java
   - REST

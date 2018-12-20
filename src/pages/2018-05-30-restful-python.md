@@ -1,8 +1,8 @@
 ---
 title: 用 Python 实现一个简单的 RESTful API 服务器
 subtitle: 详细的步骤关于如何基于 Flask 框架实现一个简单的 RESTful API 服务器。
-date: 2018-05-30 21:53:06 +0800
-lastUpdateTime: 2018-07-14 12:17:37 +0800
+date: 2018-05-30 21:53:06 +8
+lastUpdateTime: 2018-07-14 12:17:37 +8
 tags:
   - Python
   - REST

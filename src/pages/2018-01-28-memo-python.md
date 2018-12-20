@@ -1,7 +1,7 @@
 ---
 title: 关于 Python 的初体验感受
 subtitle: Python 就是牛X。
-date: 2018-01-28 20:54:03 +0800
+date: 2018-01-28 20:54:03 +8
 tags:
   - Python
 ---

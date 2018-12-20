@@ -1,6 +1,6 @@
 # richardzg
 
-Simple blog site, build with Vue.js, and styling almost copied from [gaearon/overreacted.io](https://github.com/gaearon/overreacted.io).
+Simple blog site, build with Vue.js, and styling heavily copied from [gaearon/overreacted.io](https://github.com/gaearon/overreacted.io).
 
 ## Project setup
 
@@ -67,6 +67,7 @@ Front matter of post file.
 title: title of post # *required
 subtitle: some descriptions about this post # *required
 date: 2018-12-16 00:00:00 +0800 # *required, time zone is optional
+# NOTICE: `date` is used as unique id to initial comment issue by gitalk, so DO NOT change it after comment issue was created! Otherwise new issue will be created.
 lastUpdateTime: 2018-12-20 13:01:37 +0800 # *optional, show at post page if exists
 externalCSS: file name of external CSS if need # optional
 tags: # optional, show at homepage if exists

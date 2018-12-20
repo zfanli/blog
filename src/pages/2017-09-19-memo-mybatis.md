@@ -54,8 +54,6 @@ public interface UserMapper {
 
 ### 遇到的问题和解决
 
----
-
 **时区问题**
 
 `Caused by: java.sql.SQLException: The server time zone value...`
@@ -82,8 +80,8 @@ url=jdbc:mysql://localhost:3306/spring?serverTimezone=UTC
 新版本 MySQL 驱动需要设定是否开启 SSL 认证。可以关闭或者启用。
 
 ```properties
-#改前
+# 改前
 url=jdbc:mysql://localhost:3306/spring?serverTimezone=UTC
-#改后（关闭SSL）
+# 改后（关闭SSL）
 url=jdbc:mysql://localhost:3306/spring?serverTimezone=UTC&useSSL=false
 ```

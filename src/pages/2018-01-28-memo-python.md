@@ -6,10 +6,6 @@ tags:
   - Python
 ---
 
-### 这两周的总结
-
----
-
 > 人生苦短，我用 Python。
 
 经常在各个地方看到上面这句话，让我对 Python 产生了强烈的兴趣。
@@ -134,8 +130,6 @@ if __name__ == '__main__':
 
 ### 关于爬虫
 
----
-
 一周左右基本了解了 Python，又一周时间我写出了第一个爬虫。
 
 查找了很多资料，翻阅了很多教程，原理和思路捋顺之后，放下资料对着电脑就撸出来了。
@@ -165,8 +159,6 @@ if __name__ == '__main__':
 [simple_logger.py](https://github.com/zfanli/practice/tree/master/python/crawler/crawler_douban/simple_logger.py)
 
 ### 最后
-
----
 
 做完爬虫之后，由于想利用手里的数据做一个分析的图表，遂去翻阅了一番生成分析图表的类库和文档，体验了一把 Python 强大的生态圈。
 

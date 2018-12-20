@@ -32,7 +32,7 @@ export default new Vuex.Store({
       const year = dt.getFullYear()
       const month = dt.getMonth() + 1
       const day = dt.getDate()
-      fm.attributes.formatedDate = `${year}年 ${month}月 ${day}日`
+      fm.attributes.formatedDate = `发布于 ${year}年 ${month}月 ${day}日`
       // compute read time
       const time = Math.round(fm.body.length / 500)
       const tea = new Array(Math.round(time / 6) + 1).join('☕')

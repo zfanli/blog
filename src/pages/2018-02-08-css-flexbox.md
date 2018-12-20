@@ -2,31 +2,24 @@
 title: CSS3 布局神器 - Flexbox
 subtitle: Flexbox 为我们提供了一种新的、灵活的布局方式。
 date: 2018-02-08 21:12:06 +0800
+lastUpdateTime: 2018-12-20 13:01:37 +0800
 tags:
   - CSS
 ---
 
-时隔几个月，再次回顾 Bootstrap 的文档。由于之前我看过 3.0 版本的文档，对用法还有个大致印象。这次因为要构建 UI，使用 Bootstrap 比较方便，所以打算再熟悉一下，没想到 4.0 版本已经正式发布了，索性看看 4.0 版本较之前版本有些什么变化。
+为了方便构筑前端 UI，时隔几个月我再次看起了流行的 CSS 框架 Bootstrap 的文档，发现和之前我看的时候相比，Bootstrap 已经升级了一个版本，而在新版本中摒弃了之前的 CSS + DIV 盒子的布局方式，转而全面使用起了 Flexbox 的布局。
 
-看到目前为止，4.0 是基于 CSS3 新的 Flexbox 属性进行布局的，较之前的 div 盒子相比更加方便，而且很多之前需要 hack 的方法才能解决的布局痛点现在基本都有了完美解决方案。
-
-这篇文章是我查阅资料时对 Flexbox 的概念和使用方法做的一些笔记和总结，以方便日后回顾。
+在一番了解之后得知，Flexbox 布局更加灵活方便，在 DIV 盒子时代的很多布局痛点在 Flexbox 中都有了完美的解决方案。这篇文章是我查阅资料时对 Flexbox 的概念和使用方法做的一些笔记和总结，以方便日后回顾。
 
 ---
 
 ### 参考文档
 
-Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background)。
+对于 Flexbox 布局方式，Bootstrap 官方推荐的文章是 [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background)。这是一篇很全面的文章，但是通篇英文可能不是很好理解。
 
-这是一篇很全面的文章，全英文可能不是很好理解。
+一番搜索之下找到了一篇优质的且有中文译文的文章。这是文章原文的链接：[Understanding Flexbox: Everything you need to know](https://medium.freecodecamp.org/understanding-flexbox-everything-you-need-to-know-b4013d4dc9af)。感谢作者 Ohans Emmanuel 的分享。
 
-一番搜索之下找到一篇优质的有中文译文的文章。下面是原文的链接。感谢作者 Ohans Emmanuel 的分享。
-
-[Understanding Flexbox: Everything you need to know](https://medium.freecodecamp.org/understanding-flexbox-everything-you-need-to-know-b4013d4dc9af)
-
-下面是来自大漠的译文。这篇文章足以让我们对 Flexbox 的概念和用法有一个全面的了解。
-
-[理解 Flexbox：你需要知道的一切](https://www.w3cplus.com/css3/understanding-flexbox-everything-you-need-to-know.html)
+这是来自大漠的中文译文：[理解 Flexbox：你需要知道的一切](https://www.w3cplus.com/css3/understanding-flexbox-everything-you-need-to-know.html)。这篇文章足以让我们对 Flexbox 的概念和用法有一个全面的了解。
 
 ---
 
@@ -48,17 +41,26 @@ Bootstrap 官方推荐的文档是 [A Complete Guide to Flexbox](https://css-tri
 }
 ```
 
-这个 Container 内的所有直属后代元素都处于 Flexbox 布局中。
+设置了 `flex` 属性之后，这个容器内的所有直属后代元素都将处于 Flexbox 布局中，所以这个父容器可以称作 Flex Container，而它的后代可以称作 Flex Items。
 
-这个父容器 Container 称作 Flex Container。
+**Flex Container 的可用属性有哪些？大致有以下这些！**
 
-它的后代称作 Flex Items。
-
-**Flex Container 的属性有哪些？**
-
-```
-    flex-direction  || flex-wrap    || flex-flow
- || justify-content || align-items  || align-content
+```css
+.container {
+  display: flex;
+  /* flex 布局方向 */
+  flex-direction: row;
+  /* flex 布局是否允许换行 */
+  flex-wrap: nowrap;
+  /* direction 和 wrap 的速记属性 */
+  flex-flow: row nowrap;
+  /* 水平方向控制对齐方式 */
+  justify-content: flex-start;
+  /* 垂直方向控制对齐方式 */
+  align-items: flex-start;
+  /* 多行情况下垂直方向控制对齐方式 */
+  align-content: flex-start;
+}
 ```
 
 **flex-direction**
@@ -181,10 +183,25 @@ Cross-Axis 上的调整。`row`表示时调整垂直方向，`column`表示时�
 
 上面是所有的容器的属性。针对一个容器内的所有子元素起效。
 
-**Flex 项目的属性呢？**
+**Flex 项目的属性呢？大致如下！**
 
-```
- order || flex-grow || flex-shrink || flex-basis
+```css
+.item {
+  /* 控制项目的显示顺序 */
+  order: 1;
+  /* 控制自动适应填充宽度（仅控制变大） */
+  flex-grow: 0;
+  /* 控制自动使用收缩宽度（仅控制变小） */
+  flex-shrink: 0;
+  /* 控制初始大小（需要带单位） */
+  flex-basis: auto;
+  /* grow，shrink，basis 的一个速记属性 */
+  flex: 0 0 auto;
+  /* 单独调整这个元素的水平对齐方式 */
+  justify-self: flex-start;
+  /* 单独调整这个元素的垂直对齐方式 */
+  align-self: flex-start;
+}
 ```
 
 Flex 项目有一些神奇的属性。这些属性只对该元素本身起作用。
@@ -297,11 +314,9 @@ Flex 项目有一些神奇的属性。这些属性只对该元素本身起作用
 }
 ```
 
-**子项目还有一些额外的属性！**
+**justify-self & align-self**
 
-**align-self**
-
-效果和父元素的 `align-items` 完全一致。唯一的区别就是，对子元素设置该属性可以单独调整这个元素的对齐方式，**而不影响到其他元素**！
+效果和父元素的 `justify-content` 和 `align-items` 属性是完全一样的，不同之处在于，这个属性是对子元素自身设置的，并且仅会对这个元素产生作用，**不影响到其他元素**！
 
 ```css
 .a {
@@ -323,30 +338,32 @@ Flex 项目有一些神奇的属性。这些属性只对该元素本身起作用
 
 ### 总结
 
-我们从声明 Flexbox 布局方式开始介绍了 Flex 容器和子项目。
+我们从如何声明一个 Flexbox 容器开始介绍了 Flex 容器和子项目的属性及其效果。
 
-对于 Flex 容器我们分别介绍了：
+对于 Flex 容器我们介绍了：
 
-1. 控制子元素水平或垂直分布的 `flex-direction` 属性，
-2. 控制子元素能否换行的 `flex-wrap` 属性，
-3. 前两个属性的速写 `flex-flow` 属性，
-4. 针对 Main-Axis 上对子元素进行排列调整的 `justify-content` 属性，
-5. 在 Cross-Axis 上进行排列调整的 `align-items` 属性，
-6. 以及对多行元素整体调整位置的 `align-content` 属性。
+1. 设置 `display` 属性的值为 `flex` 或 `inline-flex` 来开启 Flexbox 布局，
+2. 设置 `flex-direction` 属性来控制 Flexbox 布局的方向，
+3. 设置 `flex-wrap` 属性来控制是否在 Flexbox 中允许换行，
+4. 前两个属性可以速记为 `flex-flow` 属性，
+5. 设置 `justify-content` 属性来控制所有子元素的水平对齐方式，
+6. 设置 `align-items` 属性来控制所以子元素的垂直对齐方式，
+7. 设置 `align-content` 属性来控制多行情况下的垂直对齐方式。
 
-而针对 Flex 子项目我们介绍了：
+对于 Flex 子项目我们介绍了：
 
-1. 控制子项目显示顺序的 `order` 属性，
-2. 控制子元素在有剩余空间的情况下进行拉伸的 `flex-grow` 属性，
-3. 控制子元素在宽度变小的情况下是否收缩的 `flex-shrink` 属性，
-4. 以及指定子元素初始宽度的 `flex-basis` 属性。
-5. 最后这三个属性可以用 `flex` 属性速记，要记住**GSB**，即 `Grow -> Shrink -> Basis`。
+1. 设置 `order` 属性来控制元素的显示顺序（忽略 HTML 解析顺序），
+2. 设置 `flex-grow` 属性来控制子元素是否自适应填充宽度（仅变大），
+3. 设置 `flex-shrink` 属性来控制子元素是否收缩宽度（仅变小），
+4. 设置 `flex-basis` 属性来控制子元素的初始宽度。
+5. 前三个属性可以速记为 `flex`，顺序是**GSB**，即 `Grow -> Shrink -> Basis`，
+6. 设置 `justify-self` 属性来单独控制该子元素的水平方向对齐方式，
+7. 设置 `align-self` 属性来单独控制该子元素的垂直方向对齐方式。
 
-我们还介绍了：
+最后还有一个 Tip 可以方便的两边对齐一个子元素：
 
-1. 可以控制指定子项目在 Cross-Axis 上对齐位置的 `align-self` 属性
-2. 和技巧运用 `margin: auto` 来获得剩余空间，使指定项目和其他项目孤立开的布局。
+1. 设置 `margin: auto` 属性来获得剩余的布局空间，使指定项目和其他项目孤立开的布局。
 
-但是使用 `margin: auto` 时我们的 `justify-content` 属性就不再起作用了。
+但是使用 `margin: auto` 之后，`justify-content` 属性将不再起作用。
 
-这篇文字是一篇笔记，以方便日后回顾和加深印象。在开篇有两篇优质的文章可以在需要的时候参考。
+这是一篇笔记，以方便日后回顾和加深印象。在开篇有两篇优质的文章可以在需要的时候参考。

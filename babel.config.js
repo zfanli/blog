@@ -19,6 +19,7 @@ module.exports = {
           'bash',
           'c',
           'sql',
+          'properties',
         ],
         // plugins: ['toolbar', 'show-language', 'line-highlight'],
         css: true,

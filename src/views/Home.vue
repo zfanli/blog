@@ -26,10 +26,7 @@
         <span>{{ p.attributes.timeToRead }}</span>
       </small>
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
-      <small class="post-tags" v-if="p.attributes.tags">
-        <span>标签：</span>
-        <span class="post-tags-tag" v-for="tag in p.attributes.tags" :key="tag">{{ tag }}</span>
-      </small>
+      <tags-list :tags="p.attributes.tags"/>
     </div>
     <footer class="footer">
       <div class="footer-link" v-for="(k, i) in Object.keys(social)" :key="k">
@@ -44,6 +41,7 @@
 // @ is an alias to /src
 import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
+import TagsList from '@/components/TagsList.vue'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -55,6 +53,7 @@ export default {
   components: {
     HomeLink,
     BlogAvatar,
+    TagsList,
   },
 }
 </script>
@@ -105,23 +104,6 @@ export default {
     .post-subtitle {
       line-height: 1.75rem;
       margin: 0;
-    }
-
-    .post-tags {
-      line-height: 1.75rem;
-
-      .post-tags-tag {
-        background-color: #f5f5f5;
-        color: #e685a2;
-        padding: 0.1rem 0.2rem;
-        border-radius: 5px;
-        margin: 0 0.2rem;
-        cursor: pointer;
-
-        &:hover {
-          color: #d23669;
-        }
-      }
     }
   }
 

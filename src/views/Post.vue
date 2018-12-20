@@ -9,6 +9,7 @@
       <span>{{ ' • ' }}</span>
       <span>{{ post.attributes.timeToRead }}</span>
       <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
+      <tags-list class="c-info-tags" :tags="post.attributes.tags"/>
     </small>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <hr>
@@ -49,6 +50,7 @@
 <script>
 import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
+import TagsList from '@/components/TagsList.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
 import { mapState, mapGetters } from 'vuex'
@@ -60,6 +62,7 @@ export default {
   components: {
     HomeLink,
     BlogAvatar,
+    TagsList,
   },
   computed: {
     ...mapState(['title', 'name', 'bio', 'avatar', 'username']),
@@ -152,7 +155,8 @@ export default {
     display: block;
     line-height: 1.5rem;
 
-    .c-info-lut {
+    .c-info-lut,
+    .c-info-tags {
       display: block;
     }
   }

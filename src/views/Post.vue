@@ -8,6 +8,7 @@
       <span>{{ post.attributes.formatedDate }}</span>
       <span>{{ ' • ' }}</span>
       <span>{{ post.attributes.timeToRead }}</span>
+      <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
     </small>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <hr>
@@ -82,6 +83,13 @@ export default {
         next: !next ? null : next.attributes.title,
       }
     },
+    lastUpdateTime() {
+      const dt = new Date(this.post.attributes.lastUpdateTime)
+      const year = dt.getFullYear()
+      const month = dt.getMonth() + 1
+      const day = dt.getDate()
+      return `最后更新于 ${year}年 ${month}月 ${day}日`
+    },
   },
   methods: {
     render,
@@ -143,6 +151,10 @@ export default {
     margin-bottom: 1.75rem;
     display: block;
     line-height: 1.5rem;
+
+    .c-info-lut {
+      display: block;
+    }
   }
 
   .c-body {

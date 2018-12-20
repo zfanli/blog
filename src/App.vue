@@ -8,11 +8,12 @@
 @import './styles/common.scss';
 
 #app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, 'Microsoft YaHei',
+    'Yuanti SC', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #333;
   max-width: 700px;
   margin: 0 auto;
   padding: 2.5rem 1rem;

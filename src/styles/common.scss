@@ -155,3 +155,9 @@ hr {
 small {
   font-size: 80%;
 }
+
+small {
+  small {
+    font-size: 100%;
+  }
+}

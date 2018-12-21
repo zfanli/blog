@@ -87,13 +87,63 @@ tags: # optional, show at homepage if exists
 
 ## Problem log
 
-**404 when type post's URL in address bar directly**
+**404 when typing post's URL in address bar directly**
 
-State: **Working on**
+State: **Solved**
 
 Cause:
 
 All posts are imported dynamically **after** the app is mounted. And when typing the post's url in address bar directly, the router will search the post **immediately**, but at that time, posts were not yet be imported entirely. So the result is not found, and redirected to 404 page.
+
+Solution:
+
+The navigation guard search post used the store module directly, by `import store from './store'`, and after some tries finally I found that use store object bundled with app will avoid access before data is loaded.
+
+I do not know the reason exactly, but it seems the store bundled with app will call after data is loaded, maybe that is why it is different with the store imported directly from module.
+
+The solution is avoid use store directly from module, and use it by the callback from `next()`.
+
+For more details, below is the code that has the problem.
+
+```js
+import store from './store'
+
+...
+
+beforeEnter: (to, from, next) => {
+  const title = to.params.postTitle
+  if (!store.getters.getPostByTitle(title)) {
+    next('/404')
+  } else {
+    next()
+  }
+}
+```
+
+And, use the callback of `next()` to accesses the store will solve this problem.
+
+```js
+beforeEnter: (to, from, next) => {
+  const title = to.params.postTitle
+  next(vm => {
+    if(!vm.$store.getters.getPostByTitle(title)) {
+      next('/404')
+    }
+  })
+}
+```
+
+But there are one more thing need care about, redirect to 404 pages will be done in the callback, it means before the callback is called, the component still will be created and be mounted, although it will be redirected to 404 page finally, but before that, some errors will happen while data fetch failed.
+
+To avoid these errors, we should add a `v-if` clause to control it, make it only show details when data exists. For my situation, `post` is the data to be showed, so I wrote below code to avoid those errors.
+
+```html
+<template>
+  <div class="content" v-if="post">
+    ...
+  </div>
+</template>
+```
 
 ---
 

@@ -11,6 +11,7 @@
       <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
       <tags-list class="c-info-tags" :tags="post.attributes.tags"/>
     </small>
+    <warn-box v-if="warnMessage" :msg="warnMessage"/>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <hr>
     <div class="head bottom">
@@ -51,6 +52,7 @@
 import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
 import TagsList from '@/components/TagsList.vue'
+import WarnBox from '@/components/WarnBox.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
 import { mapState, mapGetters } from 'vuex'
@@ -63,6 +65,7 @@ export default {
     HomeLink,
     BlogAvatar,
     TagsList,
+    WarnBox,
   },
   computed: {
     ...mapState(['title', 'name', 'bio', 'avatar', 'username']),
@@ -87,11 +90,28 @@ export default {
       }
     },
     lastUpdateTime() {
-      const dt = new Date(this.post.attributes.lastUpdateTime)
+      const last = this.post.attributes.lastUpdateTime
+      // do nothing if last update time does not exist
+      if (!last) return null
+
+      const dt = new Date(last)
       const year = dt.getFullYear()
       const month = dt.getMonth() + 1
       const day = dt.getDate()
       return `最后更新于 ${year}年 ${month}月 ${day}日`
+    },
+    warnMessage() {
+      const last = this.post.attributes.lastUpdateTime || this.post.attributes.date
+      if (last) {
+        const now = new Date().getTime()
+        const target = new Date(last).getTime()
+        // 31536000000: the total milliseconds of the full year
+        // compare the update time with current time
+        if (now - target > 31536000000) {
+          return '最后更新时间距今已经超过一年。'
+        }
+      }
+      return null
     },
   },
   methods: {

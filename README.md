@@ -85,6 +85,16 @@ tags: # optional, show at homepage if exists
 - [ ] Tags page
 - [ ] Searching
 
+## Problem log
+
+**404 when type post's URL in address bar directly**
+
+State: **Working on**
+
+Cause:
+
+All posts are imported dynamically **after** the app is mounted. And when typing the post's url in address bar directly, the router will search the post **immediately**, but at that time, posts were not yet be imported entirely. So the result is not found, and redirected to 404 page.
+
 ---
 
 _2018/12/13_

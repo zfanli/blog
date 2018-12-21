@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store'
 import Home from './views/Home.vue'
 
 Vue.use(Router)
@@ -17,6 +18,14 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "post-page" */ './views/Post.vue'),
       props: true,
+      beforeEnter: (to, _, next) => {
+        const title = to.params.postTitle
+        if (!store.getters.getPostByTitle(title)) {
+          next('/404')
+        } else {
+          next()
+        }
+      },
     },
     {
       path: '/404',

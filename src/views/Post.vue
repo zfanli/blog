@@ -101,7 +101,8 @@ export default {
       return `最后更新于 ${year}年 ${month}月 ${day}日`
     },
     warnMessage() {
-      const last = this.post.attributes.lastUpdateTime || this.post.attributes.date
+      const last =
+        this.post.attributes.lastUpdateTime || this.post.attributes.date
       if (last) {
         const now = new Date().getTime()
         const target = new Date(last).getTime()
@@ -119,6 +120,12 @@ export default {
   },
   watch: {
     post(newPost, oldPost) {
+      // check if new post exists
+      // and show 404 if not exist
+      if (!newPost) {
+        this.$router.push('/404')
+        return
+      }
       const newId = new Date(newPost.attributes.date).getTime()
       const oldId = new Date(oldPost.attributes.date).getTime()
       if (newId !== oldId) {

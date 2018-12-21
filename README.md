@@ -79,6 +79,12 @@ tags: # optional, show at homepage if exists
 
 ```
 
+## Todo list
+
+- [ ] About me page
+- [ ] Tags page
+- [ ] Searching
+
 ---
 
 _2018/12/13_

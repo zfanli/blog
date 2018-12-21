@@ -101,7 +101,7 @@ The navigation guard search post used the store module directly, by `import stor
 
 I do not know the reason exactly, but it seems the store bundled with app will call after data is loaded, maybe that is why it is different with the store imported directly from module.
 
-The solution is avoid use store directly from module, and use it by the callback from `next()`.
+The solution is avoid to use the store directly from module, but use it by the callback of `next()`.
 
 For more details, below is the code that has the problem.
 
@@ -120,7 +120,7 @@ beforeEnter: (to, from, next) => {
 }
 ```
 
-And, use the callback of `next()` to accesses the store will solve this problem.
+And, use the callback of `next()` for check the store will solve this problem.
 
 ```js
 beforeEnter: (to, from, next) => {
@@ -133,9 +133,9 @@ beforeEnter: (to, from, next) => {
 }
 ```
 
-But there are one more thing need care about, redirect to 404 pages will be done in the callback, it means before the callback is called, the component still will be created and be mounted, although it will be redirected to 404 page finally, but before that, some errors will happen while data fetch failed.
+But there are one more thing need to care about, the process redirect to 404 pages will be done while the callback is called, it means before that, the component still will be created and mounted, although it will be redirected to 404 page finally, but some errors will happen before that.
 
-To avoid these errors, we should add a `v-if` clause to control it, make it only show details when data exists. For my situation, `post` is the data to be showed, so I wrote below code to avoid those errors.
+To avoid these errors, we should add a `v-if` clause for controlling, make it to be showed only when data exists. For my situation, `post` is the data to be showed, so I wrote below code to avoid those errors.
 
 ```html
 <template>

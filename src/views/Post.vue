@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" v-if="post">
     <div class="head">
       <home-link :title="title"/>
     </div>
@@ -143,7 +143,18 @@ export default {
       }
     },
   },
+  beforeRouteEnter(to, _, next) {
+    const title = to.params.postTitle
+    next(vm => {
+      if (!vm.$store.getters.getPostByTitle(title)) {
+        next('/404')
+      }
+    })
+  },
   mounted() {
+    // do nothing if post does not exist
+    if (!this.post) return
+
     // initial gitalk
     const id = new Date(this.post.attributes.date).getTime()
     gitalk(id).render('gitalk-container')

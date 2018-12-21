@@ -15,7 +15,7 @@ export default new Router({
       path: '/post/:postTitle',
       name: 'post',
       component: () =>
-        import(/* webpackChunkName: "post" */ './views/Post.vue'),
+        import(/* webpackChunkName: "post-page" */ './views/Post.vue'),
       props: true,
     },
     {

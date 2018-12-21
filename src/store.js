@@ -47,8 +47,8 @@ export default new Vuex.Store({
   },
   actions: {
     [IMPORT_POST_DYNAMIC]({ commit }, post) {
-      return import(`./pages/${post}.md`).then(m =>
-        commit(PUSH_POST_WITH_FRONT_MATTER, m.default)
+      return import(/* webpackChunkName: "post" */ `./pages/${post}.md`).then(
+        m => commit(PUSH_POST_WITH_FRONT_MATTER, m.default)
       )
     },
   },

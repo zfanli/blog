@@ -3,18 +3,22 @@
     <div class="head">
       <home-link :title="title"/>
     </div>
-    <h1>404</h1>
-    <p>{{ message }}</p>
+    <div class="error-body">
+      <h1>404</h1>
+      <p>{{ message }}</p>
+    </div>
+    <social-links :social="social"/>
   </div>
 </template>
 
 <script>
 import HomeLink from '@/components/HomeLink.vue'
+import SocialLinks from '@/components/SocialLinks.vue'
 import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['title']),
+    ...mapState(['title', 'social']),
     message() {
       const m = [
         '你找到了世界的边界。',
@@ -35,6 +39,7 @@ export default {
   },
   components: {
     HomeLink,
+    SocialLinks,
   },
 }
 </script>
@@ -43,10 +48,16 @@ export default {
 @import '../styles/constants.scss';
 
 .error-404 {
+  min-height: 50vh;
+
   .head {
     text-align: left;
     color: $font-color + #2d8b6c;
     font-size: 1.5rem;
+  }
+
+  .error-body {
+    margin-bottom: 8rem;
   }
 }
 </style>

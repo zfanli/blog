@@ -16,9 +16,12 @@
   text-align: center;
   color: #333;
   max-width: 750px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 2.5rem 1rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   @media (min-width: 751px) {
     padding: 2.5rem;

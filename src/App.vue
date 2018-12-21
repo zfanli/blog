@@ -15,12 +15,12 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #333;
-  max-width: 800px;
+  max-width: 750px;
   margin: 0 auto;
   padding: 2.5rem 1rem;
   overflow: hidden;
 
-  @media (min-width: 801px) {
+  @media (min-width: 751px) {
     padding: 2.5rem;
   }
 }

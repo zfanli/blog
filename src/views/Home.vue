@@ -28,12 +28,7 @@
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
       <tags-list :tags="p.attributes.tags"/>
     </div>
-    <footer class="footer">
-      <div class="footer-link" v-for="(k, i) in Object.keys(social)" :key="k">
-        <a class="link" :href="social[k]">{{ k }}</a>
-        <span v-if="i + 1 !== Object.keys(social).length" class="link-separator">•</span>
-      </div>
-    </footer>
+    <social-links class="footer" :social="social"/>
   </div>
 </template>
 
@@ -42,6 +37,7 @@
 import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
 import TagsList from '@/components/TagsList.vue'
+import SocialLinks from '@/components/SocialLinks.vue'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
@@ -54,6 +50,7 @@ export default {
     HomeLink,
     BlogAvatar,
     TagsList,
+    SocialLinks,
   },
 }
 </script>
@@ -108,18 +105,8 @@ export default {
   }
 
   .footer {
-    text-align: left;
     margin-top: 4.375rem;
     padding-top: 1.75rem;
-
-    .footer-link {
-      display: inline-block;
-
-      .link-separator {
-        padding: 0 0.4rem;
-        font-size: 0.5rem;
-      }
-    }
   }
 }
 </style>

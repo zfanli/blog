@@ -84,8 +84,9 @@ tags: # optional, show at homepage if exists
 - [ ] About me page
 - [ ] Tags page
 - [ ] Searching
+- [ ] i18n
 
-## Problem log
+## Problems log
 
 **404 when typing post's URL in address bar directly**
 

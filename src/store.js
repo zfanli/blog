@@ -36,7 +36,7 @@ export default new Vuex.Store({
       // compute read time
       const time = Math.round(fm.body.length / 500)
       const tea = new Array(Math.round(time / 6) + 1).join('☕')
-      fm.attributes.timeToRead = `${tea} 阅读时间${time}分钟`
+      fm.attributes.timeToRead = `${tea ? tea : '☕'} 阅读时间${time}分钟`
 
       // merge new posts object
       state.posts = {

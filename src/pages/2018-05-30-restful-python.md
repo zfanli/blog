@@ -43,11 +43,7 @@ root
 └── run.py
 ```
 
-可以看到项目中有一个 `marucat_app` 包，主要的代码都放在这里。
-
-这个包之外还有一个 `run.py` 文件，我们将其定义其为程序的入口，启动的位置。
-
-为了方便调试，`run.py` 文件将以 DEBUG 模式启动开发服务器。
+可以看到项目中有一个 `marucat_app` 包，主要的代码都放在这里。这个包之外还有一个 `run.py` 文件，我们将其定义其为程序的入口，启动的位置。并且为了方便调试，`run.py` 文件将以 DEBUG 模式启动开发服务器。
 
 这是这个文件的所有内容：
 
@@ -67,7 +63,7 @@ app.run(debug=True)
 
 这其实是一个最简单的 REST API，我们可以想象 request 头第一行会是这样的：
 
-```
+```http
 GET / HTTP/1.1
 ```
 
@@ -77,17 +73,13 @@ GET / HTTP/1.1
 
 - 给根路径（'/'）绑定一个路由
 - 这个路由需要返回一个 JSON 对象
-- 并且 Response 对象需要声明自己是 JSON 类型的（即 Content-Type 声明）
+- 并且 Response 对象需要声明自己是 JSON 类型的（即 `Content-Type` 声明）
 
-> Response 对象声明 Content-Type 是为了向请求资源的人描述 Response Body 的格式。
+> Response 对象声明 `Content-Type` 是为了向请求资源的人描述 Response Body 的格式。
 
-在 Flask 中要做这些事情是很简单的。
+在 Flask 中要做这些事情是很简单的。回到我们的文件结构，在 `marucat_app` 包中有一个 `__init__.py` 文件，我们就把这个 Hello 场景放在这里吧。
 
-回到我们的文件结构，在 `marucat_app` 包中有一个 `__init__.py` 文件，我们就把这个 Hello 场景放在这里吧。
-
-使用 Flask 框架，首先需要一个实例化的 Flask 对象，其后的所有操作都将通过这个对象来进行。
-
-我们要对这个对象绑定路由，来决定什么情况下返回什么，而除此之外的细节都由框架帮我们处理了。
+使用 Flask 框架，首先需要一个实例化的 Flask 对象，其后的所有操作都将通过这个对象来进行。我们要对这个对象绑定路由，来决定什么情况下返回什么，而除此之外的细节都由框架帮我们处理了。
 
 这是一个最简单的例子：
 
@@ -104,15 +96,11 @@ def hello():
 
 ```
 
-我们从 flask 包中导入 Flask 类和 jsonify 函数。
+我们从 flask 包中导入 `Flask` 类和 `jsonify` 函数。先创建一个 Flask 对象，因为之后的操作都将围绕这个对象进行。实例化 Flask 对象时需要提供一个参数作为识别符，通常情况下我们把 `__name__` 作为识别符。
 
-先创建一个 Flask 对象，因为之后的操作都将围绕这个对象进行。
+不过，官方文档提示第一个参数的设置分两种情况：
 
-实例化 Flask 对象时需要提供一个参数作为识别符，通常情况下我们把 `__name__` 作为识别符。
-
-不过，
-
-> 官方文档提示第一个参数的设置分两种情况：1）使用单独 module 时通常将 `__name__` 作为第一个参数；2）使用 package 时通常将 package 名硬编码作为第一个参数。究其原因，一部分 Flask 扩展将根据这个识别符来追踪 DEBUG 信息，设置不当的话会造成丢失 DEBUG 信息。
+> 1）使用单独 module 时通常将 `__name__` 作为第一个参数；2）使用 package 时通常将 package 名硬编码作为第一个参数。究其原因，一部分 Flask 扩展将根据这个识别符来追踪 DEBUG 信息，设置不当的话会造成丢失 DEBUG 信息。
 
 我们的文件结构 app 存在于 `marucat_app` 包里，我们直接将 'marucat_app' 作为第一个参数。
 
@@ -120,18 +108,14 @@ def hello():
 app = Flask('marucat_app')
 ```
 
-接下来创建一个 Hello 函数，直接返回问候信息。
-
-问候信息是一个 dict 数据，使用 jsonify 函数将其转成 JSON 字符串再返回。
+接下来创建一个 `Hello` 函数，直接返回问候信息。问候信息是一个字典对象，使用 `jsonify` 函数将其转成 JSON 字符串再返回。
 
 ```python
 def hello():
     return jsonify({'message': 'Hello'})
 ```
 
-最后，将 Hello 函数绑定在根路径（'/'）上，Flask 让我们可以使用装饰器的方式简单的绑定路由。
-
-在 Hello 函数上插入装饰器 `@app.route('/')` 。
+最后，将 `Hello` 函数绑定在根路径（'/'）上，Flask 让我们可以使用装饰器的方式简单的绑定路由。在 `Hello` 函数上插入装饰器 `@app.route('/')` 。
 
 ```python
 @app.route('/')
@@ -141,17 +125,15 @@ def hello():
 
 现在，这个简单的例子已经可以运行了，来试试看！
 
-我们可以在 IDE 中配置执行脚本，直接执行 `run.py` 就可以把这个 app 跑起来。
+我们可以在 IDE 中配置执行脚本，直接执行 `run.py` 就可以把这个 app 跑起来。或者使用命令行，输入下面的命令，效果是一样的。
 
-或者使用命令行，输入下面的命令，效果是一样的。
-
-```
+```shell
 $ python run.py
 ```
 
 键入上面的命令后，我们会看到类似下面的输出。
 
-```
+```shell
  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
  * Restarting with stat
  * Debugger is active!
@@ -160,18 +142,16 @@ $ python run.py
 
 现在 app 已经在 DEBUG 模式下运行了，可以通过 `http://127.0.0.1:5000/` 访问，我们来试试看。
 
-```
+```shell
 $ curl http://127.0.0.1:5000/
 {
   "message": "Hello"
 }
 ```
 
-我们打开一个新的命令行界面，使用 curl 访问服务器跟路径，接着我们就得到了预设的问候信息。
+我们打开一个新的命令行界面，使用 curl 访问服务器跟路径，接着我们就得到了预设的问候信息。同时在运行服务器的命令行界面上我们看到如下反馈。
 
-同时在运行服务器的命令行界面上我们看到如下反馈。
-
-```
+```shell
 127.0.0.1 - - [31/May/2018 16:12:03] "GET / HTTP/1.1" 200 -
 ```
 
@@ -189,13 +169,11 @@ Server: Werkzeug/0.14.1 Python/3.6.4
 Date: Thu, 31 May 2018 08:24:04 GMT
 ```
 
-可以看到我们简单的达到了目标。需要注意的是 jsonify 自动帮我们把 Content-Type 设定成了 JSON。
+可以看到我们简单的达到了目标。需要注意的是  `jsonify` 自动帮我们把 `Content-Type` 设定成了 JSON。
 
-我们也可以手动做这一步，下面是一个例子，在没有使用 flask 的 jsonify 函数的情况下我们怎么设置 response 的头信息。
+我们也可以手动做这一步，下面是一个例子，在没有使用 flask 的 `jsonify` 函数的情况下我们怎么设置 response 的头信息。
 
-在这里我设置了 Content-Type，这只是一个例子，用这个方法我们可以设置任何想要的头信息。
-
-Flask 为我们提供了一个定制 Response 对象的方法，`make_response`。
+在这里我设置了 `Content-Type`，这只是一个例子，用这个方法我们可以设置任何想要的头信息。Flask 为我们提供了一个定制 Response 对象的方法，`make_response`。
 
 先看看修改后的代码。
 
@@ -220,15 +198,9 @@ def hello():
 
 ```
 
-与之前不同，这次我们返回一个定制过的 response 对象。
+与之前不同，这次我们返回一个定制过的 response 对象。从 flask 包中导入 `make_response` 函数，这个函数可以生成一个 response 对象。它接受几个参数，一般我们传递两个参数给它，第一个是 response 的数据，第二个是返回状态码。
 
-从 flask 包中导入 `make_response` 函数，这个函数可以生成一个 response 对象。
-
-它接受几个参数，一般我们传递两个参数给它，第一个是 response 的数据，第二个是返回状态码。
-
-之前我们并没有显式的设置过状态码，因为默认将发送 200 状态码。
-
-这次我们将状态码设置成 201，等会看看效果。
+之前我们并没有显式的设置过状态码，因为默认将发送 `200` 状态码。这次我们将状态码设置成 `201`，等会看看效果。
 
 ```python
 resp = make_response(dumps({'message': 'Hello'}), 201)
@@ -236,7 +208,7 @@ resp = make_response(dumps({'message': 'Hello'}), 201)
 
 我们拿到 `resp` 这个对象后，就可以给它设置 header 了。
 
-为了方便使用，我们先将 Content-Type 设置为常量。
+为了方便使用，我们先将 `Content-Type` 设置为常量。
 
 ```python
 CONTENT_TYPE = 'Content-Type'
@@ -249,11 +221,7 @@ JSON_TYPE = 'application/json'
 resp.headers[CONTENT_TYPE] = JSON_TYPE
 ```
 
-到此基本搞定，我们再来跑跑看。
-
-重新打开服务器，如果你没有关闭的话，等服务器 reload 完成。
-
-在浏览器中打开开发者工具，访问 app 的地址根路径。
+到此基本搞定，我们再来跑跑看。重新打开服务器，如果你没有关闭的话，等服务器 reload 完成。在浏览器中打开开发者工具，访问 app 的地址根路径。
 
 ```json
 { "message": "Hello" }
@@ -272,11 +240,9 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 注意我们通过自定义 response 的头信息实现了下面两点：
 
 1. 状态码返回了 201
-2. Content-Type 声明了 JSON 类型
+2. `Content-Type` 声明了 JSON 类型
 
-我们完成了 Hello 的需求。
-
-虽然上面碎碎念了这么多，但其实我们仅使用了差不多 10 行代码就完成了一个 app 的构建。
+我们完成了 Hello 的需求。虽然上面碎碎念了这么多，但其实我们仅使用了10行代码就完成了一个 app 的构建。
 
 ### 小结
 
@@ -286,11 +252,11 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 这些内容可以总结如下：
 
-- Flask 框架的使用从实例化 Flask 对象开始
+- Flask 框架的使用从实例化 `Flask` 对象开始
 - 使用装饰器 `@app.route(path)` 来绑定路由
 - 路由可以是一个函数，返回一个字符串或者 response 对象
-- 如果路由函数返回一个字符串，response 头信息的 Content-Type 默认为 text/html
-- 如果不设定返回的状态码，路由函数默认返回 200 状态码
+- 如果路由函数返回一个字符串，response 头信息的 `Content-Type` 默认为 `text/html`
+- 如果不设定返回的状态码，路由函数默认返回 `200` 状态码
 - Flask 提供 `make_response` 函数来定制 response 对象
 - response 对象定制可以设定响应内容、状态码和响应头信息
 
@@ -300,13 +266,9 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 ### 设计模式问题
 
-数据库目前选择的是 MongoDB，但是也要确保以后更换数据库的情况不产生影响，所以数据库相关的部分单独提出来，放在一个子 package 里。
+数据库目前选择的是 MongoDB，但是也要确保以后更换数据库的情况不产生影响，所以数据库相关的部分单独提出来，放在一个子 package 里。对外部来说仅导入这个包，使用里面的 `factory` 方法获得需要的数据库访问 `Helper` 就足够了。
 
-对外部来说仅导入这个包，使用里面的 factory 方法获得需要的数据库访问 Helper 就足够了。
-
-假定 Helper 一定会返回正确的数据，外部不需要关注 Helper 的实现。这样就能不产生负面影响的情况下更换数据库。
-
-这个模式有很多种实现，在 Java 中这叫面向接口编程。
+假定 `Helper` 一定会返回正确的数据，外部不需要关注 `Helper` 的实现。这样就能不产生负面影响的情况下更换数据库。这个模式有很多种实现，在 Java 中这叫面向接口编程。
 
 大致概念如下：
 
@@ -319,9 +281,9 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 我在一番搜索之下找到一个很棒的库，介绍 Python 的各种设计模式。
 
-https://github.com/faif/python-patterns
+[https://github.com/faif/python-patterns](https://github.com/faif/python-patterns)
 
-在其中我找到了一个合适的设计模式，Bridge Pattern。
+在其中我找到了一个合适的设计模式，`Bridge Pattern`。
 
 概念总结一下，对外和对内的处理基本稍有些差异。大致如下：
 
@@ -335,61 +297,35 @@ https://github.com/faif/python-patterns
 
 ### logging 问题
 
-路由的绑定根据路径分成几个文件定义。
+路由的绑定根据路径分成几个文件定义。在分割文件的过程中，每个文件都需要实例化一个 `blueprint` 对象，由此来完成路由绑定操作。
 
-在分割文件的过程中，每个文件都需要实例化一个 `blueprint` 对象，由此来完成路由绑定操作。
+这些 `blueprint` 对象最终会注册在应用实例化的 Flask 对象上。由此就有一个问题，logger 对象只能从 Flask 的实例对象上访问。
 
-这些 `blueprint` 对象最终会注册在应用实例化的 Flask 对象上。
+这玩意传递都不好搞，flask 有一个 `current_app` 功能对象可以获得当前的实例化 app 对象。但是 `current_app` 使用的前提是 Flask 实例化的 app 对象调用了 `app_context` 方法创建了上下文，并且把 logger 传到上下文里去。
 
-由此就有一个问题，logger 对象只能从 Flask 的实例对象上访问。
-
-这玩意传递都不好搞，flask 有一个 `current_app` 功能对象可以获得当前的实例化 app 对象。
-
-但是 `current_app` 使用的前提是 Flask 实例化的 app 对象调用了 `app_context` 方法创建了上下文，并且把 logger 传到上下文里去。
-
-目前的几次尝试都没有成功，对 flask 的 logging 理解还不深入。
-
-但是失败几次转换思路后，我开始重新思考需求。
+目前的几次尝试都没有成功，对 flask 的 logging 理解还不深入。但是失败几次转换思路后，我开始重新思考需求。
 
 - `blueprint` 中记录跟踪信息和错误信息，并且为了保持 log 的连贯性，要将其和 flask 内部 logger 输出到同一个地方。
 
-一开始的思路是拿同一个 logger 输出就能把 log 打到同一个地方。
-
-仔细想想，并非如此，flask 内部 logger 默认情况下会把所有 log 输出到 console。
-
-所以我的目的应该是将 `blueprint` 的 log 信息同样输出到 console 就可以了。
+一开始的思路是拿同一个 logger 输出就能把 log 打到同一个地方。仔细想想，并非如此，flask 内部 logger 默认情况下会把所有 log 输出到 console。所以我的目的应该是将 `blueprint` 的 log 信息同样输出到 console 就可以了。
 
 结论：普通的 logger 就足够了。
 
 所以最后还是直接从 logging 包拿到一个 logger 直接输出 log 信息了。
 
-中途疏通花了挺长时间，或许再坚持一下一开始的思路说不定也是可以走通的，但是方向却是一开始就走偏了。
+中途疏通花了挺长时间，或许再坚持一下一开始的思路说不定也是可以走通的，但是方向却是一开始就走偏了。不过这个过程也更深入的了解到了 flask 的 logging 机制，其实默认的 logger 就是普通的 logging 包拿到的 logger 对象。
 
-不过这个过程也更深入的了解到了 flask 的 logging 机制，其实默认的 logger 就是普通的 logging 包拿到的 logger 对象。
-
-我们在实例化之前对 logging 包设定 `baseConfig` 或者 `dictConfig`，这也会对 log 产生影响。
-
-到此这条路也是被疏通了。
+我们在实例化之前对 logging 包设定 `baseConfig` 或者 `dictConfig`，这也会对 log 产生影响。到此这条路也是被疏通了。
 
 ### 处理异常 Code
 
-客户端请求的一个路径可能不存在，或者请求一个路径使用的 method 可能是不被允许的。
+客户端请求的一个路径可能不存在，或者请求一个路径使用的 method 可能是不被允许的。总有各种各种错误会在服务的中间出现，我们要处理这些错误。
 
-总有各种各种错误会在服务的中间出现，我们要处理这些错误。
+flask 使用 Werkzeug 发布应用，这个库默认帮我们处理了这些错误。但是如果你尝试一下就会发现，当错误发生时 response 会得到一个描述错误信息的页面。
 
-flask 使用 Werkzeug 发布应用，这个库默认帮我们处理了这些错误。
+通常这没什么问题，用户看到这些信息后就知道发生什么了。但是 MaruCat 只是一个 REST API 提供者，用户不是人类而是消费这些 API 的前端服务器。仅需要一个 code 就足以让服务器明白发生了什么，我们需要自定义这些错误处理。而在 flask 中做到这一切非常容易。
 
-但是如果你尝试一下就会发现，当错误发生时 response 会得到一个描述错误信息的页面。
-
-通常这没什么问题，用户看到这些信息后就知道发生什么了。
-
-但是 MaruCat 只是一个 REST API 提供者，用户不是人类而是消费这些 API 的前端服务器。
-
-仅需要一个 code 就足以让服务器明白发生了什么，我们需要自定义这些错误处理。
-
-而在 flask 中做到这一切非常容易。
-
-下面是一个处理 404 的例子，我们仅需要返回一个 code 就足够了。
+下面是一个处理404的例子，我们仅需要返回一个 code 就足够了。
 
 ```python
 from werkzeug.exceptions import NotFound
@@ -400,9 +336,7 @@ def not_found(error):
     return '', 404
 ```
 
-也没什么好解释的，注意这个方法需要接受一个 exception 的参数，如果不接受参数在运行时会抛错误的。
-
-这个 exception 有几个可访问的属性，在特定时候需要用到。以上面函数接受的参数名 `error` 为例。
+也没什么好解释的，注意这个方法需要接受一个 `exception` 的参数，如果不接受参数在运行时会抛错误的。这个 `exception` 有几个可访问的属性，在特定时候需要用到。以上面函数接受的参数名 `error` 为例。
 
 ```python
 # 错误状态码 e.g. 400
@@ -413,6 +347,4 @@ error.name
 error.description
 ```
 
-处理其他 code 的套路是一样的。
-
-这条路被疏通了。
+处理其他 code 的套路是一样的。这条路被疏通了。

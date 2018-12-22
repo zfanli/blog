@@ -30,7 +30,7 @@ CSS 的 transition 属性可以让我们从此放弃简单的 JS 动画，因为
 }
 ```
 
-上面是各个浏览器的写法和属性的最基本构成。过渡属性一般需要两个参数，第一个表述让过渡效果触发的属性，默认是 all，即当所有支持的属性发生改变时都将触发过渡效果，这就像是一个监听器，我们要做的是告诉监听器我们需要监控的属性。第二个属性是过渡效果的持续时间，单位可以为`s`或者`ms`。先来看一个例子。
+上面是各个浏览器的写法和属性的最基本构成。过渡属性一般需要两个参数，第一个表述让过渡效果触发的属性，默认是 `all`，即当所有支持的属性发生改变时都将触发过渡效果，这就像是一个监听器，我们要做的是告诉监听器我们需要监控的属性。第二个属性是过渡效果的持续时间，单位可以为`s`或者`ms`。先来看一个例子 🌰。
 
 下面是一个例子，通过触发 hover 事件来看看它的效果，把鼠标移到色块上吧，当然如果你是移动设备，手指轻触色块。
 
@@ -40,13 +40,12 @@ CSS 的 transition 属性可以让我们从此放弃简单的 JS 动画，因为
 
 是不是很酷炫，其实实现这个效果的 css 很简单，大家请看：
 
-（浏览器兼容写法省略了，在生产环境中需要加上上面所述的浏览器兼容词首）
-
 ```css
 .test {
   background-color: darksalmon;
   transition: all 2s;
 }
+
 .test:hover {
   background-color: violet;
   width: 300px;
@@ -70,7 +69,7 @@ transition: [<transition-property> || <transition-duration>
 
 默认值：`all`
 
-作用对象：所有元素，包括:before 和:after 伪元素
+作用对象：所有元素，包括 `:before` 和 `:after` 伪元素
 
 继承：`no`
 
@@ -87,6 +86,7 @@ transition: [<transition-property> || <transition-duration>
   background-color: grey;
   transition: background-color 1s;
 }
+
 .test-prop:hover {
   background-color: #269abc;
   width: 300px;
@@ -99,7 +99,7 @@ transition: [<transition-property> || <transition-duration>
 
 默认值：`0s`
 
-作用对象：所有元素，包括:before 和:after 伪元素
+作用对象：所有元素，包括 `:before` 和 `:after` 伪元素
 
 继承：`no`
 
@@ -119,14 +119,17 @@ transition: [<transition-property> || <transition-duration>
   background-color: skyblue;
   transition: all 1s;
 }
+
 .test-dura-1s:hover {
   background-color: yellowgreen;
   width: 300px;
 }
+
 .test-dura-5s {
   background-color: skyblue;
   transition: all 5s;
 }
+
 .test-dura-5s:hover {
   background-color: yellowgreen;
   width: 300px;
@@ -139,7 +142,7 @@ transition: [<transition-property> || <transition-duration>
 
 默认值：`ease`
 
-作用对象：所有元素，包括:before 和:after 伪元素
+作用对象：所有元素，包括 `:before` 和 `:after` 伪元素
 
 继承：`no`
 
@@ -160,9 +163,9 @@ transition: [<transition-property> || <transition-duration>
 >  `cubic-bezier(<number>, <number>, <number>, <number>)`：  
 >  特定的贝塞尔曲线类型，4 个数值需在[0, 1]区间内
 
-linear 中规中矩的过渡；ease 开始和结束稍有缓冲；ease-in 滑动从慢到快；ease-out 滑动从快到慢；ease-in-out 开始和结束的缓冲较为明显。
+`linear` 中规中矩的过渡；`ease` 开始和结束稍有缓冲；`ease-in` 滑动从慢到快；`ease-out` 滑动从快到慢；`ease-in-out` 开始和结束的缓冲较为明显。
 
-cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结束(p3)是[1,1]，我们需要设定中间俩个点(p1,p2)的坐标，来得到我们想要的曲线。文字表述不好理解，来看看下面这张图。
+`cubic-bezier` 这个复杂一点。由四个点控制，开始(`p0`)是[0,0]，结束(`p3`)是[1,1]，我们需要设定中间俩个点(`p1`,`p2`)的坐标，来得到我们想要的曲线。文字表述不好理解，来看看下面这张图。
 
 ![TimingFunction](/img/TimingFunction.png)
 
@@ -195,6 +198,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 2s linear;
 }
+
 .test-linear:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -205,6 +209,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 2s ease;
 }
+
 .test-ease:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -215,6 +220,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 2s ease-in;
 }
+
 .test-ease-in:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -225,6 +231,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 2s ease-out;
 }
+
 .test-ease-out:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -235,6 +242,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 2s ease-in-out;
 }
+
 .test-ease-in-out:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -255,6 +263,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
   background-color: pink;
   transition: all 1s steps(5);
 }
+
 .test-steps:hover {
   background-color: rebeccapurple;
   width: 300px;
@@ -268,7 +277,7 @@ cubic-bezier 这个复杂一点。由四个点控制，开始(p0)是[0,0]，结�
 
 默认值：`0s`
 
-作用对象：所有元素，包括:before 和:after 伪元素
+作用对象：所有元素，包括 `:before` 和 `:after` 伪元素
 
 继承：`no`
 
@@ -330,7 +339,7 @@ Transform 是变形的意思。就如字面意思一样，CSS 的 transform 属�
     <div class="contents test-transform-back third"><div class="fill two-line">ROTATE(O)</div></div>
 </div>
 
-是不是有一种想马上使用一下的冲到呢？设置很简单，第一排 2D 变换单独使用 transform 属性即可实现，第二排 3D 变换还加入了一个 perspective（透视）属性，第二排后面两个同时使用了 transform-origin 定义旋转的圆心点。
+是不是有一种想马上使用一下的冲到呢？设置很简单，第一排 2D 变换单独使用 `transform` 属性即可实现，第二排 3D 变换还加入了一个 `perspective（透视）`属性，第二排后面两个同时使用了 `transform-origin` 定义旋转的圆心点。
 
 第一排，从左到右：
 
@@ -341,14 +350,17 @@ Transform 是变形的意思。就如字面意思一样，CSS 的 transform 属�
   transition: all 0.3s ease;
   opacity: 0.5;
 }
+
 /*ROTATE*/
 .test-transform-back:hover .fill {
   transform: rotate(45deg);
 }
+
 /*SCALE*/
 .test-transform-back.second:hover .fill {
   transform: scale(2);
 }
+
 /*TRANSLATE*/
 .test-transform-back.third:hover .fill {
   transform: translate(15px, 15px);
@@ -362,19 +374,23 @@ Transform 是变形的意思。就如字面意思一样，CSS 的 transform 属�
 .test-container.second .test-transform-back {
   perspective: 100px;
 }
+
 /*ROTATE-X*/
 .test-container.second .test-transform-back:hover .fill {
   transform: rotateX(45deg);
 }
+
 /*第二个和第三个效果的圆心定位*/
 .test-container.second .test-transform-back.second .fill,
 .test-container.second .test-transform-back.third .fill {
   transform-origin: 0 100% 0;
 }
+
 /*ROTATE-Y*/
 .test-container.second .test-transform-back.second:hover .fill {
   transform: rotateY(-45deg);
 }
+
 /*ROTATE(O)*/
 .test-container.second .test-transform-back.third:hover .fill {
   transform: rotate(45deg);

@@ -85,6 +85,7 @@ tags: # optional, show at homepage if exists
 - [ ] Tags page
 - [ ] Searching
 - [ ] i18n
+- [ ] images zoom viewer
 
 ## Problems log
 

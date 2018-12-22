@@ -7,11 +7,9 @@ tags:
   - spring
 ---
 
-### 版本和说明
+说在最前，我使用的 Security 版本是**4.2.3.RELEASE**！
 
-说在最前，我使用的 Security 版本是**4.2.3.RELEASE**！！！
-
-然后还有一件事，遇到啥问题自己解决不了的话，在到处百度谷歌之前不如先看看官方文档，全体看一遍的话能避免很多问题！！！
+然后还有一件事，遇到啥问题自己解决不了的话，在到处百度谷歌之前不如先看看官方文档，全体看一遍的话能避免很多问题！
 
 [Spring Security Reference](https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/)
 
@@ -174,11 +172,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 **为什么？**
 
-首先要了解到 Session 是如何被查找的。当然是用 Session ID 去匹配。
-
-而 Session ID 是谁提供的？是在 Request 中提供的。
-
-那么 Request 从哪里取得的 Session ID？是从 cookie 中取得的。
+首先要了解到 Session 是如何被查找的。当然是用 Session ID 去匹配。而 Session ID 是谁提供的？是在 Request 中提供的。那么 Request 从哪里取得的 Session ID？是从 cookie 中取得的。
 
 （那么 cookie 中的 Session ID 从哪儿来的呢？废话当然是第一次请求时候服务器发来的，然后就存在 cookie 中了）
 
@@ -217,9 +211,7 @@ accept-language: zh-CN,zh;q=0.8
 
 服务器一看，好家伙连身份证都没有，当然不让过了。毕竟安全策略是`.anyRequest().authenticated()`嘛。（然后顺手还给发行了一个新的 Session ID）
 
-现在知道问题所在了，没有发送 Session ID 给服务器当然无法找到匹配的 session 验证 token 啦。那取不到 Session ID 的原因是什么？Cookie 丢失吗？
-
-在浏览器查询发现 cookie 并没有丢失。
+现在知道问题所在了，没有发送 Session ID 给服务器当然无法找到匹配的 session 验证 token 啦。那取不到 Session ID 的原因是什么？Cookie 丢失吗？在浏览器查询发现 cookie 并没有丢失。
 
 **那为什么 http 下的请求取不到 cookie ？**
 
@@ -301,7 +293,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 保持登陆
         .and().rememberMe().key("remember")
             // 退出
-        .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout");
+        .and()
+            .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout");
     }
 
 }
@@ -356,12 +351,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 保持登陆
         .and().rememberMe().key("remember")
             // 退出
-        .and().logout().logoutUrl("/logout").logoutSuccessUrl("/login?logout").permitAll();
+        .and()
+            .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
     }
 
 }
 ```
-
-### 先到这里
-
-写文档时间太长也不好，今天就先到这里吧。

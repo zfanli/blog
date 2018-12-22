@@ -20,7 +20,7 @@ tags:
 
 但每次都需要写调用语句，容易出错。（而且限定名太长也麻烦）
 
-可以创建一个借口，并且 xml 配置限定名（mapper 标签的 namespace 属性）指定到这个接口。在程序中使用这个借口访问数据库。xml 配置如下。
+可以创建一个接口，并且 xml 配置限定名（mapper 标签的 namespace 属性）指定到这个接口。在程序中使用这个接口访问数据库。xml 配置如下。
 
 ```xml
 <mapper namespace="mybatis.test.mapper.UserMapper">

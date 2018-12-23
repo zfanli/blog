@@ -4,6 +4,29 @@
   </div>
 </template>
 
+<script>
+import { mapActions, mapMutations } from 'vuex'
+import list from './pages'
+import { IMPORT_POST_DYNAMIC, SET_THE_REAL_LENGTH } from './actions'
+
+export default {
+  methods: {
+    ...mapMutations({
+      setRealLength: SET_THE_REAL_LENGTH,
+    }),
+    ...mapActions({
+      importPostDynamic: IMPORT_POST_DYNAMIC,
+    }),
+  },
+  created() {
+    // set the real length of post list
+    this.setRealLength(list.length)
+    // loading posts dynamically
+    list.map(l => this.importPostDynamic(l))
+  },
+}
+</script>
+
 <style lang="scss">
 @import './styles/common.scss';
 @import './styles/fonts.scss';

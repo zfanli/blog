@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { IMPORT_POST_DYNAMIC, PUSH_POST_WITH_FRONT_MATTER } from './actions'
+import {
+  IMPORT_POST_DYNAMIC,
+  PUSH_POST_WITH_FRONT_MATTER,
+  SET_THE_REAL_LENGTH,
+} from './actions'
 import ac from './App.config'
 
 Vue.use(Vuex)
@@ -9,6 +13,7 @@ export default new Vuex.Store({
   state: {
     ...ac.info,
     posts: {},
+    realLength: null,
   },
   getters: {
     postIds(state) {
@@ -20,6 +25,12 @@ export default new Vuex.Store({
     },
     getPostByTitle(_, getters) {
       return title => getters.postList.find(p => p.attributes.title === title)
+    },
+    isLoading(state, getters) {
+      if (state.realLength && getters.postList) {
+        return state.realLength !== getters.postList.length
+      }
+      return true
     },
   },
   mutations: {
@@ -43,6 +54,9 @@ export default new Vuex.Store({
         ...state.posts,
         [dt.getTime()]: fm,
       }
+    },
+    [SET_THE_REAL_LENGTH](state, length) {
+      state.realLength = length
     },
   },
   actions: {

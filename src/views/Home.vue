@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <home-loading v-if="isLoading"/>
+  <div v-else class="home">
     <div class="head">
       <home-link :title="title"/>
     </div>
@@ -38,19 +39,21 @@ import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
 import TagsList from '@/components/TagsList.vue'
 import SocialLinks from '@/components/SocialLinks.vue'
+import HomeLoading from '@/views/HomeLoading.vue'
 import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'home',
   computed: {
     ...mapState(['title', 'name', 'bio', 'avatar', 'username', 'social']),
-    ...mapGetters(['postList']),
+    ...mapGetters(['postList', 'isLoading']),
   },
   components: {
     HomeLink,
     BlogAvatar,
     TagsList,
     SocialLinks,
+    HomeLoading,
   },
 }
 </script>

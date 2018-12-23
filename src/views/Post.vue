@@ -1,5 +1,6 @@
 <template>
-  <div class="content" v-if="post">
+  <post-loading v-if="isLoading"/>
+  <div class="content" v-else-if="post">
     <div class="head">
       <home-link :title="title"/>
     </div>
@@ -53,6 +54,7 @@ import HomeLink from '@/components/HomeLink.vue'
 import BlogAvatar from '@/components/BlogAvatar.vue'
 import TagsList from '@/components/TagsList.vue'
 import WarnBox from '@/components/WarnBox.vue'
+import PostLoading from '@/views/PostLoading.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
 import { mapState, mapGetters } from 'vuex'
@@ -66,10 +68,11 @@ export default {
     BlogAvatar,
     TagsList,
     WarnBox,
+    PostLoading,
   },
   computed: {
     ...mapState(['title', 'name', 'bio', 'avatar', 'username']),
-    ...mapGetters(['postIds', 'postList']),
+    ...mapGetters(['postIds', 'postList', 'isLoading']),
     post() {
       return this.$store.getters.getPostByTitle(this.postTitle)
     },
@@ -152,12 +155,11 @@ export default {
     })
   },
   mounted() {
-    // do nothing if post does not exist
-    if (!this.post) return
-
-    // initial gitalk
-    const id = new Date(this.post.attributes.date).getTime()
-    gitalk(id).render('gitalk-container')
+    // initial gitalk if div exists
+    if (document.getElementById('gitalk-container')) {
+      const id = new Date(this.post.attributes.date).getTime()
+      gitalk(id).render('gitalk-container')
+    }
 
     // initial loading external css file if exists
     const externalCSS = this.post.attributes.externalCSS

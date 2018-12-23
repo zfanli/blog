@@ -1,8 +1,5 @@
-import store from '../store'
-import { IMPORT_POST_DYNAMIC } from '../actions'
-
 // list of post file name
-const list = [
+export default [
   '2018-06-05-simple-usage-mongodb',
   '2018-05-30-restful-python',
   '2018-02-08-css-flexbox',
@@ -17,5 +14,3 @@ const list = [
   '2017-09-19-memo-mybatis',
   '2017-09-10-memo-spring-mvc',
 ]
-
-list.map(l => store.dispatch(IMPORT_POST_DYNAMIC, l))

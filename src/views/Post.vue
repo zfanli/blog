@@ -130,9 +130,9 @@ export default {
     checkPostExist(post) {
       if (!post) {
         this.$router.push('/404')
-        return true
+        return false
       }
-      return false
+      return true
     },
     initialGitalk(id) {
       const gt = document.getElementById('gitalk-container')
@@ -149,14 +149,14 @@ export default {
 
       // check if new post exists
       // and show 404 if not exist
-      if (this.checkPostExist(newPost)) {
+      if (!this.checkPostExist(newPost)) {
         return
       }
 
       const newId = new Date(newPost.attributes.date).getTime()
       const oldId = new Date(oldPost.attributes.date).getTime()
       if (newId !== oldId) {
-        // update gitalk while route chnaged
+        // update gitalk while route changed
         this.initialGitalk(newId)
         // update external css file if exists
         this.importExternalCSSFile()
@@ -168,7 +168,7 @@ export default {
     if (this.isLoading) return
 
     // 404 if post does exist
-    if (this.checkPostExist(this.post)) {
+    if (!this.checkPostExist(this.post)) {
       return
     }
 

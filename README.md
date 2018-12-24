@@ -34,7 +34,8 @@ export default {
     bio: 'your bio',
     avatar, // path to avatar
     username: 'username of github for make a link',
-    social: { // for generate social link in footer
+    social: {
+      // for generate social link in footer
       github: 'https://github.com/(your username here)',
       others: 'link/to/others/social/site',
     },
@@ -75,17 +76,17 @@ tags: # optional, show at homepage if exists
   - it's an array
 ---
 
-...
-
 ```
 
 ## Todo list
 
-- [ ] About me page
-- [ ] Tags page
+- [ ] about me page
+- [ ] tags page
 - [ ] Searching
 - [ ] i18n
 - [ ] images zoom viewer
+- [x] scroll to top
+- [x] loading pages
 
 ## Problems log
 
@@ -98,6 +99,67 @@ Cause:
 All posts are imported dynamically **after** the app is mounted. And when typing the post's url in address bar directly, the router will search the post **immediately**, but at that time, posts were not yet be imported entirely. So the result is not found, and redirected to 404 page.
 
 Solution:
+
+I have found a new solution. There are no need of navigation guard.
+
+Just route to the post page, and show a loading page if data was not yet imported, do no check until data loading was finished. Use the `watch` mechanism to check `post`'s changes, and only when data was loaded, (the `isLoading` flag is set to false), react to the existence of `post`, the result could be 2 ways, one is the `post` does exist and show its detail, the another is the `post` does not exist so redirect to 404.
+
+This way can solve the problem perfectly, whatever typing the url directly, or reload current page manually, to the old solution I have wrote below, it has a probability of direct to 404 page randomly and unexpectedly, because both the created hook and the navigation guard do not wait for data loading.
+
+For more detail, see the codes.
+
+```js
+...
+  watch: {
+    // watching the `post` data
+    post(newPost, oldPost) {
+      // this is the key point of the solution,
+      // if the post has been changed,
+      // do nothing if the `isLoading` flag is true,
+      // because the data was not yet imported entirely,
+      // we have to wait for loading
+      if (this.isLoading) return
+
+      // this function is for check if the new post exists,
+      // it will return false if not exist,
+      // and we will do nothing if this flag is set to true
+      if (!this.checkPostExist(newPost)) {
+        return
+      }
+
+      // others to do while route changed
+      const newId = new Date(newPost.attributes.date).getTime()
+      const oldId = new Date(oldPost.attributes.date).getTime()
+      if (newId !== oldId) {
+        // update gitalk while route changed
+        this.initialGitalk(newId)
+        // update external css file if exists
+        this.importExternalCSSFile()
+      }
+    },
+  },
+  mounted() {
+    // just as we said before,
+    // mounted hook is also have to wait for loading
+    if (this.isLoading) return
+
+    // 404 if post does exist
+    if (!this.checkPostExist(this.post)) {
+      return
+    }
+
+    // others to do for initialization
+
+    // initial gitalk if div exists
+    const id = new Date(this.post.attributes.date).getTime()
+    this.initialGitalk(id)
+
+    this.importExternalCSSFile()
+  },
+  ...
+```
+
+_OLD SOLUTION_
 
 The navigation guard search post used the store module directly, by `import store from './store'`, and after some tries finally I found that use store object bundled with app will avoid access before data is loaded.
 
@@ -128,7 +190,7 @@ And, use the callback of `next()` for check the store will solve this problem.
 beforeEnter: (to, from, next) => {
   const title = to.params.postTitle
   next(vm => {
-    if(!vm.$store.getters.getPostByTitle(title)) {
+    if (!vm.$store.getters.getPostByTitle(title)) {
       next('/404')
     }
   })
@@ -141,9 +203,7 @@ To avoid these errors, we should add a `v-if` clause for controlling, make it to
 
 ```html
 <template>
-  <div class="content" v-if="post">
-    ...
-  </div>
+  <div class="content" v-if="post">...</div>
 </template>
 ```
 

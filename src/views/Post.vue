@@ -144,6 +144,9 @@ export default {
   },
   watch: {
     post(newPost, oldPost) {
+      // wait for loading
+      if (this.isLoading) return
+
       // check if new post exists
       // and show 404 if not exist
       if (this.checkPostExist(newPost)) {
@@ -161,6 +164,9 @@ export default {
     },
   },
   mounted() {
+    // wait for loading
+    if (this.isLoading) return
+
     // 404 if post does exist
     if (this.checkPostExist(this.post)) {
       return

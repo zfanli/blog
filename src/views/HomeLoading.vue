@@ -28,6 +28,7 @@
 
 <style lang="scss" scoped>
 @import '../styles/animation.scss';
+@import '../styles/constants.scss';
 
 .home-loading {
   .head,
@@ -42,7 +43,7 @@
   .post .tags .tag-label,
   .post .tags .tag,
   .footer .footer-link {
-    background-color: #faeded;
+    background-color: $loading-bg-color;
     animation: coloring 2s infinite linear;
   }
 

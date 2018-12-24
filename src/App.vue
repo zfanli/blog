@@ -1,15 +1,20 @@
 <template>
   <div id="app">
     <router-view/>
+    <scroll-to-top/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
-import list from './pages'
 import { IMPORT_POST_DYNAMIC, SET_THE_REAL_LENGTH } from './actions'
+import ScrollToTop from '@/components/ScrollToTop.vue'
+import list from './pages'
 
 export default {
+  components: {
+    ScrollToTop,
+  },
   methods: {
     ...mapMutations({
       setRealLength: SET_THE_REAL_LENGTH,

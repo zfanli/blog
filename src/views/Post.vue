@@ -120,52 +120,57 @@ export default {
   },
   methods: {
     render,
+    importExternalCSSFile() {
+      // update external css if need
+      const externalCSS = this.post.attributes.externalCSS
+      if (externalCSS) {
+        import(/* webpackChunkName: "external-css" */ `../pages/externalCSS/${externalCSS}.scss`)
+      }
+    },
+    checkPostExist(post) {
+      if (!post) {
+        this.$router.push('/404')
+        return true
+      }
+      return false
+    },
+    initialGitalk(id) {
+      const gt = document.getElementById('gitalk-container')
+      if (gitalk && gt) {
+        gt.innerHTML = ''
+        gitalk(id).render('gitalk-container')
+      }
+    },
   },
   watch: {
     post(newPost, oldPost) {
       // check if new post exists
       // and show 404 if not exist
-      if (!newPost) {
-        this.$router.push('/404')
+      if (this.checkPostExist(newPost)) {
         return
       }
+
       const newId = new Date(newPost.attributes.date).getTime()
       const oldId = new Date(oldPost.attributes.date).getTime()
       if (newId !== oldId) {
         // update gitalk while route chnaged
-        if (gitalk) {
-          document.getElementById('gitalk-container').innerHTML = ''
-          gitalk(newId).render('gitalk-container')
-        }
-
-        // update external css if need
-        const externalCSS = this.post.attributes.externalCSS
-        if (externalCSS) {
-          import(/* webpackChunkName: "external-css" */ `../pages/externalCSS/${externalCSS}.scss`)
-        }
+        this.initialGitalk(newId)
+        // update external css file if exists
+        this.importExternalCSSFile()
       }
     },
   },
-  beforeRouteEnter(to, _, next) {
-    const title = to.params.postTitle
-    next(vm => {
-      if (!vm.$store.getters.getPostByTitle(title)) {
-        next('/404')
-      }
-    })
-  },
   mounted() {
-    // initial gitalk if div exists
-    if (document.getElementById('gitalk-container')) {
-      const id = new Date(this.post.attributes.date).getTime()
-      gitalk(id).render('gitalk-container')
+    // 404 if post does exist
+    if (this.checkPostExist(this.post)) {
+      return
     }
 
-    // initial loading external css file if exists
-    const externalCSS = this.post.attributes.externalCSS
-    if (externalCSS) {
-      import(/* webpackChunkName: "external-css" */ `../pages/externalCSS/${externalCSS}.scss`)
-    }
+    // initial gitalk if div exists
+    const id = new Date(this.post.attributes.date).getTime()
+    this.initialGitalk(id)
+
+    this.importExternalCSSFile()
   },
 }
 </script>
@@ -186,8 +191,6 @@ export default {
     margin: 0;
     margin-top: 2rem;
     font-weight: 900;
-
-    // font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Yuanti SC', sans-serif;
   }
 
   .c-info {

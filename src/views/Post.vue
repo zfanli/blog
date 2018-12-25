@@ -147,8 +147,8 @@ export default {
       // wait for loading
       if (this.isLoading) return
 
-      // check if new post exists
-      // and show 404 if not exist
+      // check if new post does not exist
+      // if so then show 404
       if (!this.checkPostExist(newPost)) {
         return
       }
@@ -167,12 +167,12 @@ export default {
     // wait for loading
     if (this.isLoading) return
 
-    // 404 if post does exist
+    // 404 if post does not exist
     if (!this.checkPostExist(this.post)) {
       return
     }
 
-    // initial gitalk if div exists
+    // initial gitalk with current id
     const id = new Date(this.post.attributes.date).getTime()
     this.initialGitalk(id)
 

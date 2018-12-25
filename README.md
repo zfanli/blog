@@ -98,15 +98,23 @@ Cause:
 
 All posts are imported dynamically **after** the app is mounted. And when typing the post's url in address bar directly, the router will search the post **immediately**, but at that time, posts were not yet be imported entirely. So the result is not found, and redirected to 404 page.
 
+The flow is like this:
+
+1. app mounted
+2. data loading started
+3. searching post by title -> not found
+4. data loading ended -> the data was imported at this time
+5. 404 page showed -> because not found was raised at No.3
+
 Solution:
 
 I have found a new solution. There are no need of navigation guard.
 
-Just route to the post page, and show a loading page if data was not yet imported, do no check until data loading was finished. Use the `watch` mechanism to check `post`'s changes, and only when data was loaded, (the `isLoading` flag is set to false), react to the existence of `post`, the result could be 2 ways, one is the `post` does exist and show its detail, the another is the `post` does not exist so redirect to 404.
+For the first, let's just route to the post page, then show a loading page if data was not yet imported, and do not check until data loading was finished. Use the `watch` mechanism to check `post`'s changes, and only when data was loaded, for now, the `isLoading` flag is set to false, then react to the existence of `post`, the result could be 2 ways, one is the `post` does exist then show its details, the another one is the `post` does not exist so redirect to 404.
 
-This way can solve the problem perfectly, whatever typing the url directly, or reload current page manually, to the old solution I have wrote below, it has a probability of direct to 404 page randomly and unexpectedly, because both the created hook and the navigation guard do not wait for data loading.
+This way can solves the problem perfectly, whatever typing the url directly, or reload current page manually. For the old solution I have wrote below, it has a probability of directs to 404 page randomly and unexpectedly, because both the mounted hook and the navigation guard will not wait for data loading.
 
-For more detail, see the codes.
+For more details, see the code below.
 
 ```js
 ...
@@ -116,13 +124,13 @@ For more detail, see the codes.
       // this is the key point of the solution,
       // if the post has been changed,
       // do nothing if the `isLoading` flag is true,
-      // because the data was not yet imported entirely,
-      // we have to wait for loading
+      // because the data was not yet be imported entirely,
+      // we have to wait for it
       if (this.isLoading) return
 
       // this function is for check if the new post exists,
       // it will return false if not exist,
-      // and we will do nothing if this flag is set to true
+      // and we will do nothing if so
       if (!this.checkPostExist(newPost)) {
         return
       }
@@ -140,17 +148,17 @@ For more detail, see the codes.
   },
   mounted() {
     // just as we said before,
-    // mounted hook is also have to wait for loading
+    // mounted hook is also has to wait for loading
     if (this.isLoading) return
 
-    // 404 if post does exist
+    // 404 if post does not exist
     if (!this.checkPostExist(this.post)) {
       return
     }
 
     // others to do for initialization
 
-    // initial gitalk if div exists
+    // initial gitalk
     const id = new Date(this.post.attributes.date).getTime()
     this.initialGitalk(id)
 

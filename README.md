@@ -110,9 +110,9 @@ Solution:
 
 I have found a new solution. There are no need of navigation guard.
 
-For the first, let's just route to the post page, then show a loading page if data was not yet imported, and do not check until data loading was finished. Use the `watch` mechanism to check `post`'s changes, and only when data was loaded, for now, the `isLoading` flag is set to false, then react to the existence of `post`, the result could be 2 ways, one is the `post` does exist then show its details, the another one is the `post` does not exist so redirect to 404.
+For the first, let's just route to the post page, then show a loading page if data was not yet be imported, and do not check anything until data loading was finished. Use the `watch` mechanism to check `post`'s changes, and only when data was loaded, for my code, the `isLoading` flag is set to false, then react to the existence of `post`, the result could be 2 ways, one is the `post` does exist then show its details, the another one is the `post` does not exist so redirect to 404.
 
-This way can solves the problem perfectly, whatever typing the url directly, or reload current page manually. For the old solution I have wrote below, it has a probability of directs to 404 page randomly and unexpectedly, because both the mounted hook and the navigation guard will not wait for data loading.
+This way can solves the problem perfectly, whatever typing the url directly, or reload current page manually. For the old solution I have wrote below, it has a probability of directs to 404 page randomly and unexpectedly, because both the mounted hook and the navigation guard will not waiting for data loading.
 
 For more details, see the code below.
 

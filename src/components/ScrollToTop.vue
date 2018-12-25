@@ -58,13 +58,13 @@ export default {
 <style lang="scss" scoped>
 @keyframes swing {
   0% {
-    transform: translate3d(0, -10%, 0) rotate(180deg);
+    transform: translate3d(0, -5%, 0) rotate(180deg);
   }
   50% {
     transform: translate3d(0, 10%, 0) rotate(180deg);
   }
   100% {
-    transform: translate3d(0, -10%, 0) rotate(180deg);
+    transform: translate3d(0, -5%, 0) rotate(180deg);
   }
 }
 
@@ -91,6 +91,7 @@ export default {
     .arrow {
       display: block;
       transform: rotate(180deg);
+      animation: swing 4s ease-out infinite;
     }
   }
 }
@@ -99,21 +100,13 @@ export default {
 .zero-enter-active,
 .zero-leave-active {
   transition: all 0.3s ease;
-  // animation-play-state: paused;
 }
-.zero-enter {
-  opacity: 0;
-  transform: translate3d(0, 200%, 0);
-}
-.zero-enter-to {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  // animation: swing 2s infinite ease-in-out;
-}
+.zero-enter-to,
 .zero-leave {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+.zero-enter,
 .zero-leave-to {
   opacity: 0;
   transform: translate3d(0, -200%, 0);

@@ -6,7 +6,7 @@
     </div>
     <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
     <post-list :posts="postList"/>
-    <social-links class="footer" :social="social"/>
+    <link-socials class="footer" :social="social"/>
   </div>
 </template>
 
@@ -15,7 +15,7 @@
 import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
 import PostList from '@/components/PostList.vue'
-import SocialLinks from '@/components/SocialLinks.vue'
+import LinkSocials from '@/components/LinkSocials.vue'
 import HomeLoading from '@/views/HomeLoading.vue'
 import { mapState, mapGetters } from 'vuex'
 
@@ -29,7 +29,7 @@ export default {
     LinkHome,
     BlogIntro,
     PostList,
-    SocialLinks,
+    LinkSocials,
     HomeLoading,
   },
 }

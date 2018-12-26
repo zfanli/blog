@@ -7,13 +7,13 @@
       <h1>404</h1>
       <p>{{ message }}</p>
     </div>
-    <social-links :social="social"/>
+    <link-socials :social="social"/>
   </div>
 </template>
 
 <script>
 import LinkHome from '@/components/LinkHome.vue'
-import SocialLinks from '@/components/SocialLinks.vue'
+import LinkSocials from '@/components/LinkSocials.vue'
 import { mapState } from 'vuex'
 
 export default {
@@ -39,7 +39,7 @@ export default {
   },
   components: {
     LinkHome,
-    SocialLinks,
+    LinkSocials,
   },
 }
 </script>

@@ -45,18 +45,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/constants.scss';
-
 .error-404 {
   min-height: 50vh;
-
-  .head {
-    text-align: left;
-    color: $font-color + #2d8b6c;
-    font-size: 1.5rem;
-  }
+  text-align: left;
 
   .error-body {
+    text-align: center;
     margin-bottom: 8rem;
   }
 }

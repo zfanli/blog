@@ -169,15 +169,9 @@ export default {
 
 <style lang="scss">
 @import '../styles/theme.css';
-@import '../styles/constants.scss';
 
 .content {
   text-align: left;
-
-  .head {
-    color: $font-color + #2d8b6c;
-    font-size: 1.5rem;
-  }
 
   .c-title {
     margin: 0;

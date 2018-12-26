@@ -2,7 +2,7 @@
   <home-loading v-if="isLoading"/>
   <div v-else class="home">
     <div class="head">
-      <link-home :title="title"/>
+      <link-home class="head-title" :title="title"/>
     </div>
     <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
     <list-posts :posts="postList"/>
@@ -39,10 +39,13 @@ export default {
 .home {
   .head {
     text-align: left;
-    font-size: 2.5rem;
-    font-weight: 900;
-    color: #333;
     margin-bottom: 2.5rem;
+
+    .head-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #333;
+    }
   }
 
   .footer {

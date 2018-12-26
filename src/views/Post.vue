@@ -12,7 +12,7 @@
       <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
       <list-tags class="c-info-tags" :tags="post.attributes.tags"/>
     </small>
-    <warn-box v-if="warnMessage" :msg="warnMessage"/>
+    <box-warning v-if="warnMessage" :msg="warnMessage"/>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <hr>
     <div class="head bottom">
@@ -39,7 +39,7 @@
 import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
 import ListTags from '@/components/ListTags.vue'
-import WarnBox from '@/components/WarnBox.vue'
+import BoxWarning from '@/components/BoxWarning.vue'
 import PostLoading from '@/views/PostLoading.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
@@ -53,7 +53,7 @@ export default {
     LinkHome,
     BlogIntro,
     ListTags,
-    WarnBox,
+    BoxWarning,
     PostLoading,
   },
   computed: {

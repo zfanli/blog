@@ -2,7 +2,7 @@
   <post-loading v-if="isLoading"/>
   <div class="content" v-else-if="post">
     <div class="head">
-      <home-link :title="title"/>
+      <link-home :title="title"/>
     </div>
     <h1 class="c-title">{{ post.attributes.title }}</h1>
     <small class="c-info">
@@ -16,7 +16,7 @@
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
     <hr>
     <div class="head bottom">
-      <home-link :title="title"/>
+      <link-home :title="title"/>
     </div>
     <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
     <div class="other-posts">
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import HomeLink from '@/components/HomeLink.vue'
+import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
 import TagList from '@/components/TagList.vue'
 import WarnBox from '@/components/WarnBox.vue'
@@ -50,7 +50,7 @@ export default {
     postTitle: String,
   },
   components: {
-    HomeLink,
+    LinkHome,
     BlogIntro,
     TagList,
     WarnBox,

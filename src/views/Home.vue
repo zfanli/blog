@@ -2,7 +2,7 @@
   <home-loading v-if="isLoading"/>
   <div v-else class="home">
     <div class="head">
-      <home-link :title="title"/>
+      <link-home :title="title"/>
     </div>
     <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
     <post-list :posts="postList"/>
@@ -12,7 +12,7 @@
 
 <script>
 // @ is an alias to /src
-import HomeLink from '@/components/HomeLink.vue'
+import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
 import PostList from '@/components/PostList.vue'
 import SocialLinks from '@/components/SocialLinks.vue'
@@ -26,7 +26,7 @@ export default {
     ...mapGetters(['postList', 'isLoading']),
   },
   components: {
-    HomeLink,
+    LinkHome,
     BlogIntro,
     PostList,
     SocialLinks,

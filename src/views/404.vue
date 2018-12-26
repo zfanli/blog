@@ -1,7 +1,7 @@
 <template>
   <div class="error-404">
     <div class="head">
-      <home-link :title="title"/>
+      <link-home :title="title"/>
     </div>
     <div class="error-body">
       <h1>404</h1>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import HomeLink from '@/components/HomeLink.vue'
+import LinkHome from '@/components/LinkHome.vue'
 import SocialLinks from '@/components/SocialLinks.vue'
 import { mapState } from 'vuex'
 
@@ -38,7 +38,7 @@ export default {
     },
   },
   components: {
-    HomeLink,
+    LinkHome,
     SocialLinks,
   },
 }

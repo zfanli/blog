@@ -1,5 +1,5 @@
 <template>
-  <small class="tags" v-if="tags">
+  <small class="tag-list" v-if="tags">
     <span>标签：</span>
     <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
   </small>
@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tags {
+.tag-list {
   line-height: 1.75rem;
 
   .tag {

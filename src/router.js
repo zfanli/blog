@@ -12,6 +12,13 @@ export default new Router({
       component: Home,
     },
     {
+      path: '/tags/:tag?',
+      name: 'tags',
+      component: () =>
+        import(/* webpackChunkName: "tags-page" */ './views/Tags.vue'),
+      props: true,
+    },
+    {
       path: '/post/:postTitle',
       name: 'post',
       component: () =>

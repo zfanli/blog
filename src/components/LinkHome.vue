@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/constants.scss';
+@import '@/styles/constants.scss';
 
 .home-link {
   text-decoration: none;

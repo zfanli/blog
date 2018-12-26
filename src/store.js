@@ -32,6 +32,25 @@ export default new Vuex.Store({
       }
       return true
     },
+    tags(_, getters) {
+      let tags = {}
+      for (let p of getters.postList) {
+        for (let t of p.attributes.tags) {
+          if (!tags[t]) {
+            tags[t] = 1
+          } else {
+            tags[t] += 1
+          }
+        }
+      }
+      return tags
+    },
+    getPostByTag(_, getters) {
+      return tag => {
+        if (!tag) return getters.postList
+        return getters.postList.filter(p => p.attributes.tags.includes(tag))
+      }
+    },
   },
   mutations: {
     [PUSH_POST_WITH_FRONT_MATTER](state, fm) {

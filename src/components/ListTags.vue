@@ -1,7 +1,7 @@
 <template>
   <small class="tag-list" v-if="tags">
     <span>标签：</span>
-    <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
+    <router-link class="tag" v-for="tag in tags" :key="tag" :to="`/tags/${tag}`">{{ tag }}</router-link>
   </small>
 </template>
 
@@ -24,6 +24,7 @@ export default {
     border-radius: 5px;
     margin: 0 0.2rem;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
       color: #d23669;

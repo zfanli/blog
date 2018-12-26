@@ -10,7 +10,7 @@
       <span>{{ ' • ' }}</span>
       <span>{{ post.attributes.timeToRead }}</span>
       <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
-      <tags-list class="c-info-tags" :tags="post.attributes.tags"/>
+      <tag-list class="c-info-tags" :tags="post.attributes.tags"/>
     </small>
     <warn-box v-if="warnMessage" :msg="warnMessage"/>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
@@ -18,21 +18,7 @@
     <div class="head bottom">
       <home-link :title="title"/>
     </div>
-    <div class="intro">
-      <blog-avatar class="intro-avatar" :src="avatar"/>
-      <div class="intro-body">
-        <div class="intro-name">
-          这是
-          <a
-            class="intro-link link"
-            :href="`https://github.com/${username}`"
-            target="_blank"
-          >{{ name }}</a>
-          的个人博客，
-        </div>
-        <div class="intro-bio">{{ bio }}</div>
-      </div>
-    </div>
+    <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
     <div class="other-posts">
       <router-link
         class="link"
@@ -51,8 +37,8 @@
 
 <script>
 import HomeLink from '@/components/HomeLink.vue'
-import BlogAvatar from '@/components/BlogAvatar.vue'
-import TagsList from '@/components/TagsList.vue'
+import BlogIntro from '@/components/BlogIntro.vue'
+import TagList from '@/components/TagList.vue'
 import WarnBox from '@/components/WarnBox.vue'
 import PostLoading from '@/views/PostLoading.vue'
 import render from '@/utils/markdown'
@@ -65,8 +51,8 @@ export default {
   },
   components: {
     HomeLink,
-    BlogAvatar,
-    TagsList,
+    BlogIntro,
+    TagList,
     WarnBox,
     PostLoading,
   },
@@ -226,20 +212,6 @@ export default {
 
   .head.bottom {
     margin-bottom: 2rem;
-  }
-
-  .intro {
-    text-align: left;
-    display: flex;
-    margin-bottom: 4.5rem;
-
-    .intro-avatar {
-      margin-right: 0.875rem;
-    }
-
-    .intro-body {
-      line-height: 1.75rem;
-    }
   }
 }
 </style>

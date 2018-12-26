@@ -4,31 +4,8 @@
     <div class="head">
       <home-link :title="title"/>
     </div>
-    <div class="intro">
-      <blog-avatar class="intro-avatar" :src="avatar"/>
-      <div class="intro-body">
-        <div class="intro-name">
-          这是
-          <a
-            class="intro-link link"
-            :href="`https://github.com/${username}`"
-            target="_blank"
-          >{{ name }}</a>
-          的个人博客，
-        </div>
-        <div class="intro-bio">{{ bio }}</div>
-      </div>
-    </div>
-    <div class="post" v-for="p in postList" :key="p.attributes.date">
-      <router-link :to="`/post/${p.attributes.title}`" class="post-title">{{ p.attributes.title }}</router-link>
-      <small class="post-info">
-        <span>{{ p.attributes.formatedDate }}</span>
-        <span>{{ ' • ' }}</span>
-        <span>{{ p.attributes.timeToRead }}</span>
-      </small>
-      <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
-      <tags-list :tags="p.attributes.tags"/>
-    </div>
+    <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
+    <post-list :posts="postList"/>
     <social-links class="footer" :social="social"/>
   </div>
 </template>
@@ -36,8 +13,8 @@
 <script>
 // @ is an alias to /src
 import HomeLink from '@/components/HomeLink.vue'
-import BlogAvatar from '@/components/BlogAvatar.vue'
-import TagsList from '@/components/TagsList.vue'
+import BlogIntro from '@/components/BlogIntro.vue'
+import PostList from '@/components/PostList.vue'
 import SocialLinks from '@/components/SocialLinks.vue'
 import HomeLoading from '@/views/HomeLoading.vue'
 import { mapState, mapGetters } from 'vuex'
@@ -50,8 +27,8 @@ export default {
   },
   components: {
     HomeLink,
-    BlogAvatar,
-    TagsList,
+    BlogIntro,
+    PostList,
     SocialLinks,
     HomeLoading,
   },
@@ -59,8 +36,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/styles/constants.scss';
-
 .home {
   .head {
     text-align: left;
@@ -68,43 +43,6 @@ export default {
     font-weight: 900;
     color: #333;
     margin-bottom: 2.5rem;
-  }
-
-  .intro {
-    text-align: left;
-    display: flex;
-    margin-bottom: 4.5rem;
-
-    .intro-avatar {
-      margin-right: 0.875rem;
-    }
-
-    .intro-body {
-      line-height: 1.75rem;
-    }
-  }
-
-  .post {
-    text-align: left;
-    margin: 3.5rem 0;
-
-    .post-title {
-      font-size: 1.5rem;
-      font-weight: 900;
-      text-decoration: none;
-      color: $font-color;
-      display: inline-block;
-    }
-
-    .post-info {
-      line-height: 1.75rem;
-      display: block;
-    }
-
-    .post-subtitle {
-      line-height: 1.75rem;
-      margin: 0;
-    }
   }
 
   .footer {

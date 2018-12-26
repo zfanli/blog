@@ -69,6 +69,8 @@ export default {
 }
 
 .scroll-to-top {
+  z-index: 99;
+
   .zero {
     cursor: pointer;
     font-family: 'PaytoneOne-Regular', 'Microsoft YaHei', 'Yuanti SC',

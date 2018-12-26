@@ -8,16 +8,17 @@
         <span>{{ p.attributes.timeToRead }}</span>
       </small>
       <p class="post-subtitle">{{ p.attributes.subtitle }}</p>
-      <tag-list :tags="p.attributes.tags"/>
+      <list-tags :tags="p.attributes.tags"/>
     </div>
   </div>
 </template>
 
 <script>
-import TagList from '@/components/TagList.vue'
+import ListTags from '@/components/ListTags.vue'
+
 export default {
   components: {
-    TagList,
+    ListTags,
   },
   props: {
     posts: Array,

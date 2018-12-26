@@ -10,7 +10,7 @@
       <span>{{ ' • ' }}</span>
       <span>{{ post.attributes.timeToRead }}</span>
       <span class="c-info-lut" v-if="post.attributes.lastUpdateTime">{{ lastUpdateTime }}</span>
-      <tag-list class="c-info-tags" :tags="post.attributes.tags"/>
+      <list-tags class="c-info-tags" :tags="post.attributes.tags"/>
     </small>
     <warn-box v-if="warnMessage" :msg="warnMessage"/>
     <div v-html="render(post.body)" :class="`c-body ${post.attributes.externalCSS}`"/>
@@ -38,7 +38,7 @@
 <script>
 import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
-import TagList from '@/components/TagList.vue'
+import ListTags from '@/components/ListTags.vue'
 import WarnBox from '@/components/WarnBox.vue'
 import PostLoading from '@/views/PostLoading.vue'
 import render from '@/utils/markdown'
@@ -52,7 +52,7 @@ export default {
   components: {
     LinkHome,
     BlogIntro,
-    TagList,
+    ListTags,
     WarnBox,
     PostLoading,
   },

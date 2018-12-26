@@ -5,7 +5,7 @@
       <link-home :title="title"/>
     </div>
     <blog-intro :avatar="avatar" :username="username" :name="name" :bio="bio"/>
-    <post-list :posts="postList"/>
+    <list-posts :posts="postList"/>
     <link-socials class="footer" :social="social"/>
   </div>
 </template>
@@ -14,7 +14,7 @@
 // @ is an alias to /src
 import LinkHome from '@/components/LinkHome.vue'
 import BlogIntro from '@/components/BlogIntro.vue'
-import PostList from '@/components/PostList.vue'
+import ListPosts from '@/components/ListPosts.vue'
 import LinkSocials from '@/components/LinkSocials.vue'
 import HomeLoading from '@/views/HomeLoading.vue'
 import { mapState, mapGetters } from 'vuex'
@@ -28,7 +28,7 @@ export default {
   components: {
     LinkHome,
     BlogIntro,
-    PostList,
+    ListPosts,
     LinkSocials,
     HomeLoading,
   },

@@ -39,7 +39,26 @@ export default {
     ...mapState(['title', 'social']),
     ...mapGetters(['tags', 'getPostByTag']),
     tagNames() {
-      return Object.keys(this.tags).sort()
+      return Object.keys(this.tags).sort((a, b) => this.tags[b] - this.tags[a])
+    },
+  },
+  methods: {
+    checkTagExist(tag) {
+      // if path variable `tag` exists,
+      // check if it is contained by `tags`
+      // if it is a invalid value, route to tags' home page
+      if (tag && !this.tags[tag]) {
+        this.$router.push('/tags')
+      }
+    },
+  },
+  created() {
+    this.checkTagExist(this.tag)
+  },
+  watch: {
+    // watch `tag` and check if it exists when changed
+    tag(nTag) {
+      this.checkTagExist(nTag)
     },
   },
 }

@@ -3,8 +3,8 @@ title: 关于 Spring Security 配置和问题解决的一些笔记
 subtitle: 安全框架初接触都是大坑...思路最重要。
 date: 2017-10-6 10:26:16 +8
 tags:
-  - java
-  - spring
+  - Java
+  - Spring
 ---
 
 说在最前，我使用的 Security 版本是**4.2.3.RELEASE**！

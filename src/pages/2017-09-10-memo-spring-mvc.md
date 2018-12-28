@@ -3,8 +3,8 @@ title: 关于 Spring 框架的一些笔记
 subtitle: 学习 Spring MVC，DI，AOP 等相关知识的笔记。
 date: 2017-9-10 08:03:51 +8
 tags:
-  - java
-  - spring
+  - Java
+  - Spring
 ---
 
 最近阅读《Spring in Action》一书来学习和练习 spring 框架的使用。对学习中遇到对一些问题以及解决对方法做一些笔记。

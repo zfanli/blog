@@ -11,6 +11,7 @@
     "gitalk": "^1.4.1",
     "markdown-it": "^8.4.2",
     "markdown-it-task-lists": "^2.1.1",
+    "medium-zoom": "^1.0.2",
     "prismjs": "^1.15.0",
     "vue": "^2.5.17",
     "vue-analytics": "^5.16.1",

@@ -81,10 +81,10 @@ tags: # optional, show at homepage if exists
 ## Todo list
 
 - [ ] about me page
-- [ ] tags page
+- [x] tags page
 - [ ] Searching
 - [ ] i18n
-- [ ] images zoom viewer
+- [x] images zoom viewer
 - [x] scroll to top
 - [x] loading pages
 

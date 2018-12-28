@@ -129,7 +129,7 @@ export default {
       }
     },
     registerImageZoomer() {
-      zoomer('img', { background: '#000000cc' })
+      zoomer('img', { background: '#fff' })
     },
   },
   watch: {

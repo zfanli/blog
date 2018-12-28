@@ -44,6 +44,7 @@ import PostLoading from '@/views/PostLoading.vue'
 import render from '@/utils/markdown'
 import gitalk from '@/utils/gitalk'
 import { mapState, mapGetters } from 'vuex'
+import zoomer from 'medium-zoom'
 
 export default {
   props: {
@@ -127,6 +128,9 @@ export default {
         gitalk(id).render('gitalk-container')
       }
     },
+    registerImageZoomer() {
+      zoomer('img', { background: '#000000cc' })
+    },
   },
   watch: {
     post(newPost, oldPost) {
@@ -163,6 +167,12 @@ export default {
     this.initialGitalk(id)
 
     this.importExternalCSSFile()
+
+    // register image zoomer
+    this.registerImageZoomer()
+  },
+  updated() {
+    this.registerImageZoomer()
   },
 }
 </script>

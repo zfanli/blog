@@ -19,7 +19,7 @@ export default {
   methods: {
     cliackHandler() {
       this.isShow = false
-      window.scrollTo(0, 0)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
     triggerDisplayOnScroll() {
       const ah = window.screen.availHeight

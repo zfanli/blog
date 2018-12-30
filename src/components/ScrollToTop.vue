@@ -1,7 +1,7 @@
 <template>
   <div class="scroll-to-top">
     <transition name="zero" type="transition">
-      <div v-show="isShow" class="zero" @click="cliackHandler">
+      <div v-show="isShow" class="zero" @click="cliackHandler" title="点击回到顶部">
         <span class="arrow">V</span>
       </div>
     </transition>

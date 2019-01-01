@@ -103,21 +103,25 @@ table {
 
 table th {
   font-weight: 600;
+  background-color: $font-color;
+  color: #fff;
 }
 
 table th,
 table td {
   padding: 6px 13px;
-  border: 1px solid #dfe2e5;
 }
 
-table tr {
+table tbody tr {
   background-color: #fff;
-  border-top: 1px solid #c6cbd1;
 }
 
-table tr:nth-child(2n) {
-  background-color: #f6f8fa;
+table tbody tr:nth-child(2n) {
+  background-color: #ffeff4;
+}
+
+table tbody tr:last-child {
+  border-bottom: 1px solid $font-color;
 }
 
 ul,

@@ -1,5 +1,6 @@
 // list of post file name
 export default [
+  '2018-12-31-oracle-sql-tuning',
   '2018-06-05-simple-usage-mongodb',
   '2018-05-30-restful-python',
   '2018-02-08-css-flexbox',

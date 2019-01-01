@@ -148,23 +148,27 @@ tags:
 
 表分区具体的作用是根据一定条件将一张大表分为几个不同的 `partition`，对外部来说这张表还是一个整体，但是优化器会自动判断，在符合条件的情况下访问对应的分区来提高效率。当然也可以在 SQL 语句中表名后面添加 `partition(partition_name)` 小句来指定访问哪个分区。
 
+```sql
+select count(1) from target_table partition(table_part01);
+```
+
 举一个具体的例子来说，假设顾客表中有两种类型的顾客，`企业` 顾客和 `个人` 顾客，这张表有 1 亿数据，如果我们按照顾客类型来给表进行分区，并且刚好每个分区有 5 千万数据的话，这时如果我们查询某个 `企业` 顾客的数据，查找范围就会从原本的 1 亿数据直接降到 5 千万数据，效率可谓直接提升一倍。
 
 这个例子的 DDL 可能是下面这样的：
 
 ```sql
-CREATE TABLE customer (
-  id NUMBER,
-  name VARCHAR2(256),
-  customer_type VARCHAR2(20),
+create table customer (
+  id number,
+  name varchar2(256),
+  customer_type varchar2(20),
   -- other fields
-) PARTITION BY LIST (customer_type) (
-  PARTITION customer_enterprise VALUES ('enterprise'),
-  PARTITION customer_individual VALUES ('individual')
+) partition by list (customer_type) (
+  partition customer_enterprise values ('enterprise'),
+  partition customer_individual values ('individual')
 );
 ```
 
-> 表分区仅在企业版本可用。
+> ⚠️ 表分区仅在企业版本可用。
 
 官方文档建议的应该考虑创建表分区的场景：
 
@@ -183,25 +187,25 @@ Oracle 中在执行 DML 语句时会产生 `UNDO` 和 `REDO` 日志来保护数�
 使用 `/*+ APPEND */` 的 SQL 语句看起来是这样的。
 
 ```sql
-INSERT /*+ APPEND */ INTO target_table (
+insert /*+ APPEND */ into target_table (
   target_values,
   -- ...
-)
+);
 ```
 
 使用 `nologging` 有两种方式，一种是从表定义上设定。
 
 ```sql
-ALTER TABLE target_table NOLOGGING;
+alter table target_table nologging;
 ```
 
 或者写在 DML 语句中。
 
 ```sql
-INSERT /*+ APPEND */ INTO target_table NOLOGGING (
+insert /*+ APPEND */ into target_table nologging (
   target_values,
   -- ...
-)
+);
 ```
 
 **分割复杂 SQL 为多个简单 SQL，用中间表减少内存负担**
@@ -223,12 +227,12 @@ Oracle 中有一个 `merge` 语句，原本是用来聚合 `insert` 和 `update`
 其结果是，一条更新 45 万数据的 `update` 需要跑 7 个小时的操作，使用 `merge` 只花了 50 分钟就完成了。目前这个方案正在研讨中，还没有最终决定，但是使用 `merge` 可以提升更新效率是毋庸置疑的。
 
 ```sql
-MERGE INTO table_a A USING table_b B
-ON (conditions)
-WHEN MATCHED THEN
-  UPDATE SET A.fields = B.fields
-WHEN NOT MATCHED THEN
-  INSERT(field_names) VALUES(field_values);
+merge into table_a a using table_b b
+on (conditions)
+when matched then
+  update set a.fields = b.fields
+when not matched then
+  insert(field_names) values(field_values);
 ```
 
 如果仅做更新操作，`WHEN NOT MATCHED THEN` 后面的语句可以不需要。
@@ -242,7 +246,7 @@ WHEN NOT MATCHED THEN
 对我们项目来说，数据库使用独立服务器，CPU 经常是闲置的，所以压缩表没有太大负担。
 
 ```sql
-ALTER TABLE target_table COMPRESS;
+alter table target_table compress;
 ```
 
 // TODO reproduce

@@ -164,7 +164,7 @@ For more details, see the code below.
 
     this.importExternalCSSFile()
   },
-  ...
+...
 ```
 
 _OLD SOLUTION_

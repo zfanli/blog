@@ -71,13 +71,11 @@ tags:
 set autotrace on;
 ```
 
-> 关于 `autotrace` 更多选项参考 [Tuning SQL\*Plus - Tracing Statements](https://docs.oracle.com/database/121/SQPUG/ch_eight.htm#SQPUG534)。
-
 但如果你和我一样没有 DBA 权限，那就只能看推测的实行计划了。在 SQL Developer 里选中一条 SQL 按 `F10` 可以查看精简版的执行计划，好处是方便快捷。
 
 > 我使用的 Oracle SQL Developer 版本：3.2.20.10
 
-除此之外还有一个信息更多的解释句话语句，写在每条 SQL 前面，查看推测的执行计划。
+除此之外还有一个可查看信息更多的解释计划语句，写在每条 SQL 前面，查看**推测的执行计划**。注意，重点是“推测”，由于没有 DBA 权限，这种解释计划仅是基于统计信息分析出来的“Guess”，并非实际采用的执行计划。同理上面的 `F10` 也是仅供参考的，一般保证表的统计信息分析正确的话还是挺准的。
 
 ```sql
 explain plan for
@@ -88,7 +86,11 @@ explain plan for
 select plan_table_output from table(dbms_xplan.display())；
 ```
 
-> 关于解释计划参考文档 [EXPLAIN PLAN](https://docs.oracle.com/database/121/SQLRF/statements_9010.htm#SQLRF01601) 和 [DBMS_XPLAN](https://docs.oracle.com/database/121/ARPLS/d_xplan.htm#ARPLS378)。
+参考文档：
+
+- [Tuning SQL\*Plus - Tracing Statements](https://docs.oracle.com/database/121/SQPUG/ch_eight.htm#SQPUG534)
+- [Database SQL Language Reference - EXPLAIN PLAN](https://docs.oracle.com/database/121/SQLRF/statements_9010.htm#SQLRF01601)
+- [Database PL/SQL Packages and Types Reference - DBMS_XPLAN](https://docs.oracle.com/database/121/ARPLS/d_xplan.htm#ARPLS378)
 
 **添加索引并配合使用 `hint` 让不走索引的部分强制走索引看效果**
 
@@ -106,29 +108,66 @@ select /*+ index(target_table target_index) */
 from target_table;
 ```
 
-> 关于 `hint` 参考文档 [INDEX Hint](https://docs.oracle.com/database/121/SQLRF/sql_elements006.htm#SQLRF51098)。
-
 > ⚠️ 创建索引的代价是会占更多的储存空间，并且每次插入数据的时候都会对索引进行维护，对写入速度产生影响。
 
 一般来说，到这里很多问题都可以得到解决，尤其是读大表的场景，可能慢就慢在没有索引上。如果问题还没得到解决，我们再往后看。
 
+参考文档：
+
+- [Database SQL Language Reference - INDEX Hint](https://docs.oracle.com/database/121/SQLRF/sql_elements006.htm#BABEFDFC)
+- [Database SQL Language Reference - USE_NL Hint](https://docs.oracle.com/database/121/SQLRF/sql_elements006.htm#BABDDFHC)
+
 **对无法走索引的部分进行改写最终让其走索引**
 
-某些语句的写法也会导致无法利用索引。在我们遇到的问题中就有一个，使用了 `in` 关键字导致无法走索引，最终通过改写 SQL 将其转化为 `inner join` 才得以使用索引，提高了执行效率。
+某些语句的写法也会导致无法利用索引。在我们遇到的问题中就有一个，使用了 `in` 关键字导致无法走索引，最终通过改写 SQL 将其转化为 `inner join` 才得以使用索引，提高了执行效率。代码无法直接贴出来，做个重现的例子，大致如下。
+
+```sql
+-- 原始语句
+select
+  field_names...
+from
+  table_a a
+where
+  a.the_key in (select the_key from table_b);
+
+-- 修改后语句
+select
+  field_names...
+from
+  table_a a
+inner join
+  table_b b
+on
+  a.the_key = b.the_key;
+```
 
 优化索引当然不能解决所有的问题，所以如果索引解决不了问题，就要结合更多信息来分析定位问题所在了。
 
-如果遇到内存问题，如 PAG 写满了，或者 UNDO 空间写爆了，考虑下面的方案。
-
 **分割复杂 SQL 到多个简单 SQL，减少内存占有时间**
+
+如果遇到内存问题，如 PAG 写满了，或者 UNDO 空间写爆了，考虑这个方案。
 
 子查询嵌套过多会加剧内存资源的消耗，也会拉长内存占有时间。这时可以考虑分割复杂的 SQL 语句，加入几个中间表来缓和内存的负担。毕竟对于系统稳定性来说，增加的那点储存空间总是微不足道的。
 
 **使用 `merge` 代替 `update` 缩短更新操作时间，减少内存占有时间**
 
-`merge` 是一个可以同时进行插入和更新的聚合操作，而在最新版本中已经支持单独的更新和插入操作。经过我们的测试发现，用 `merge` 来进行更新操作执行效率比 `update` 要好，数据量大的情况下甚至 `merge` 的效率高出几倍。
+`merge` 是一个可以同时进行插入和更新的聚合操作，而在最新版本中已经支持单独的更新和插入操作。经过我们的测试发现，用 `merge` 来进行更新操作执行效率比 `update` 要好，数据量大的情况下甚至 `merge` 的效率高出几倍。`merge` 示例如下。
+
+```sql
+merge into table_a a using table_b b
+on (a.pk = b.pk)
+when matched then     -- 当满足 on 里的条件执行更新语句，可省略
+  update set a.flag = b.flag
+when not matched then -- 当不满足 on 里的条件执行插入语句，可省略
+  insert (a.pk, a.flag, a.other_fields)
+  values (b.pk, b.flag, b.other_fields);
+```
 
 尝试用更有效率的写法改写 SQL，减少内存占有时间，也是优化内存出问题的一种方法。目前我们遇到带报错信息的问题还只有内存问题一个。
+
+参考文档：
+
+- [Database SQL Language Reference - MERGE](https://docs.oracle.com/database/121/SQLRF/statements_9017.htm#SQLRF01606)
 
 如果上述方案都没有太大效果，那么可能你的瓶颈出现在 IO 操作或者是 `merge` 和 `update` 等非常昂贵又不可避免的操作上了，这时就可以尝试从业务的角度上优化。
 
@@ -164,7 +203,7 @@ from target_table;
 
 ### 案例
 
-这是案例部分。
+这是案例部分。关于执行时间，可能会因为当时服务器的负载状态而产生一定的偏差，优化效果仅供参考。
 
 #### 添加索引（针对表读取大于写入的场景）
 

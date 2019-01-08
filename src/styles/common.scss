@@ -99,6 +99,8 @@ table {
   overflow: auto;
   font-size: 0.85rem;
   line-height: auto;
+  width: fit-content;
+  margin: $common-margin-button auto;
 }
 
 table th {

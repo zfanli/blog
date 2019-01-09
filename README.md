@@ -78,6 +78,15 @@ tags: # optional, show at homepage if exists
 
 ```
 
+## Commit labels
+
+- `docs`: updates about documents.
+- `update`: normal update.
+- `fix`: fixes bugs.
+- `refactor`: source refactor.
+- `feat`: new features finished.
+- `post`: updates about posts.
+
 ## Todo list
 
 - [ ] about me page

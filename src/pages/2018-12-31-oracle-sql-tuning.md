@@ -455,7 +455,7 @@ username: system
 password: oracle
 ```
 
-也可以直接进入虚拟机环境中使用 SQL*Plus。
+也可以直接进入虚拟机环境中使用 SQL\*Plus。
 
 ```bash
 # 首先拿到 Container 的 ID
@@ -466,11 +466,11 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 $ docker exec -it 2a00bcc34a0f /bin/bash
 # 可以看到前缀的变换，现在已经处于虚拟机中的控制台
 # 然后，切换到 oracle 用户
-root@2a00bcc34a0f:/\# su oracle 
+root@2a00bcc34a0f:/\# su oracle
 # 进入 Oracle 安装目录
 oracle@2a00bcc34a0f:/$ cd $ORACLE_HOME
 # 启动 sqlplus
-oracle@2a00bcc34a0f:/u01/app/oracle/product/12.1.0/xe$ bin/sqlplus / as sysdba 
+oracle@2a00bcc34a0f:/u01/app/oracle/product/12.1.0/xe$ bin/sqlplus / as sysdba
 
 SQL*Plus: Release 12.1.0.2.0 Production on Tue Jan 8 09:51:44 2019
 
@@ -482,11 +482,11 @@ Oracle Database 12c Standard Edition Release 12.1.0.2.0 - 64bit Production
 
 SQL> select 1 from dual;
 
-	 1
+   1
 ----------
-	 1
+   1
 
-SQL> 
+SQL>
 ```
 
 要关闭 Oracle 数据库，输入下面的命令。如果不知道 Container ID，可以使用 `docker ps` 命令查询。
@@ -499,3 +499,101 @@ $ docker container stop [container id]
 
 - [Docker Documentation](https://docs.docker.com/)
 - [Docker Hub - sath89/oracle-12c](https://hub.docker.com/r/sath89/oracle-12c)
+
+#### 准备测试数据
+
+我们直接抽取 `dba_objects` 的数据作为测试数据。
+
+```sql
+SQL> create table test_table as select * from dba_objects;
+
+Table created.
+```
+
+查看一下数据量。
+
+```sql
+SQL> select count(1) from test_table;
+
+  COUNT(1)
+----------
+     90883
+```
+
+现在我们的测试数据准备好了，这张表目前没有任何索引，主键也没有。
+
+参考文档：
+
+- [Database Reference - 2.179 ALL_OBJECTS](https://docs.oracle.com/database/121/REFRN/GUID-AA6DEF8B-F04F-482A-8440-DBCB18F6C976.htm#REFRN20146)
+
+#### 打开 `autotrace` 和 `timing` 显示执行计划和时间。
+
+执行计划和时间有助于分析 SQL 性能，我们先打开 `autotrace` 和 `timing` 看看效果。
+
+```sql
+SQL> set autotrace on;
+SQL> set timing on;
+SQL> select count(1) from test_table;
+
+  COUNT(1)
+----------
+     90883
+
+Elapsed: 00:00:00.06
+
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 711311523
+
+-------------------------------------------------------------------------
+| Id  | Operation          | Name       | Rows  | Cost (%CPU)| Time  |
+-------------------------------------------------------------------------
+|   0 | SELECT STATEMENT   |            |     1 |   416   (1)| 00:00:01 |
+|   1 |  SORT AGGREGATE    |            |     1 |            |          |
+|   2 |   TABLE ACCESS FULL| TEST_TABLE |   100K|   416   (1)| 00:00:01 |
+-------------------------------------------------------------------------
+
+Note
+-----
+   - dynamic statistics used: dynamic sampling (level=2)
+
+
+Statistics
+----------------------------------------------------------
+    0  recursive calls
+    0  db block gets
+ 1528  consistent gets
+ 1525  physical reads
+    0  redo size
+  544  bytes sent via SQL*Net to client
+  551  bytes received via SQL*Net from client
+    2  SQL*Net roundtrips to/from client
+    0  sorts (memory)
+    0  sorts (disk)
+    1  rows processed
+```
+
+执行计划的解读可以参考下面的资料，但是官方资料很多地方都不在我们的关注点上，不过好在仔细阅读执行计划也能悟出很多有用的信息，至少走没走索引是看一眼就知道的。
+
+参考文档：
+
+- [Database SQL Tuning Guide - 7 Reading Execution Plans](https://docs.oracle.com/database/121/TGSQL/tgsql_interp.htm#TGSQL94618)
+
+#### 重现索引优化案例
+
+// TODO
+
+```sql
+create table test_dba as select rownum as id, d.*, t.* from dba_objects d, (select level as type_code from dual connect by level <= 100) t;
+
+select
+  count(1)
+from
+  test_dba t
+where
+  t.timestamp >= '2015-07-06:11:00:00'
+  and t.timestamp <= '2015-07-06:12:00:00'
+  and t.object_type = upper('table')
+  and t.status = upper('valid');
+
+```

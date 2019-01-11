@@ -596,4 +596,54 @@ where
   and t.object_type = upper('table')
   and t.status = upper('valid');
 
+
+create table characters as select
+  -- 角色 ID
+  lpad(level, 8, '0') as character_id,
+  -- 玩家 ID，可重复
+  floor(dbms_random.value(1, 500000)) as gamer_id,
+  -- 角色性别，0: Female，1: Male
+  floor(dbms_random.value(0, 2)) as character_gender,
+  -- 角色等级
+  floor(dbms_random.value(1, 100)) as character_level,
+  -- 角色持有的金币
+  floor(dbms_random.value(1, 100)) as character_coin,
+  -- 创建时间
+  current_timestamp as create_date,
+  -- 角色名称
+  'NAME_' || level as character_name,
+  -- 其他的字段
+  'INFO1_' || current_timestamp as character_info1,
+  'INFO2_' || current_timestamp as character_info2,
+  'INFO3_' || current_timestamp as character_info3
+from dual connect by level <= 500000;
+
+alter table characters 
+  alter column character_id varchar2(8) not null;
+alter table characters 
+  add constraint characters_pk primary key (character_id);
+
+SELECT ABS(MOD(DBMS_RANDOM.RANDOM,100000000)) FROM DUAL;
+
+select count(1) from (
+select gamer_id from characters group by gamer_id having count(gamer_id) > 1);
+
+select character_id, gamer_id, character_gender, character_level from characters where rownum <= 10;
+
+select max(count(gamer_id)) from characters group by gamer_id having count(1) > 1;
+
+SELECT segment_name AS TABLENAME,
+       BYTES B,
+       BYTES / 1024 KB,
+       BYTES / 1024 / 1024 MB
+  FROM user_segments
+where segment_name = upper('characters');
+
 ```
+
+
+**⚠️ Tips**
+
+数据准备完毕，不过为了方便再现性能问题，我们可以限制一下 Docker 引擎使用的 CPU 资源，参考下图。
+
+![Docker Configuration](/img/DockerConfiguration.png)

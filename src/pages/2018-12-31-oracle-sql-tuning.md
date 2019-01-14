@@ -1,5 +1,5 @@
 ---
-title: Oracle 数据库 SQL 性能调优实践笔记
+title: Oracle 数据库 SQL 调优笔记 1 - 思路和方案
 subtitle: 亿级数据量下 Oracle 数据库 SQL 性能调优初级解决方案。
 date: 2018-12-31 19:54:38 +8
 lastUpdateTime: 2019-01-08 17:57:00 +8
@@ -12,36 +12,30 @@ tags:
 
 > ETL： Extract-Transform-Load，一个数据清洗 ✨ 的过程。
 
-目前项目正在构建一个 ETL 系统，做数据清洗 ✨。到现在已经拿到“真实数据”在做最后的线上环境测试。
+`ETL` 系统是用来做数据清理的一系列流程。近期项目已经拿到“真实数据”在做最后的线上环境测试。
 
-在测试的过程中，出现了几个性能上有问题的 SQL，这篇文章对解决这些性能问题的过程和方法做一个笔记。不过在进入正文之前，我想说一下问题出现的原因。
+这篇文章将记录几个普遍的 SQL 性能问题的解决方法。不过在进入正文之前，我想说一下问题出现的原因。
 
-- 设计时不清楚表的数据规模，未考虑性能上的影响
-- 开发时过于注重遵从设计，写法没有考虑性能优化
-- 测试中数据量少，体现不出来问题
+- 设计时未考虑性能上的影响（因为不清楚表的数据规模）
+- 开发时没有考虑性能优化（一味遵从设计）
+- 测试体现不出问题（数据量不够）
 
-其根本原因还是在设计阶段的疏忽，设计 ETL 系统掌握每张表的数据规模也是非常重要的事情，有助于针对性的优化某些任务，优化时间分配。
+当然有些情况是无法预料的，不过在设计之初如果能尽量掌握这些信息，将对针对性优化某些任务很有帮助。
 
 ---
 
 ### 写在前面
 
-篇幅略长，主要是想对项目上最近解决的一些 SQL 性能问题做一个笔记。笔记包括问题出现的原因，解决的过程以及结果，最后动手做个再现和验证。下面是这篇文章的 road map。
+用两篇文章来对最近项目中遇到的 SQL 性能问题做一个笔记和总结。
 
-- 概括部分
-  - 罗列具体方法
-  - 概括调优思路
-  - 结合案例
-  - 少量代码示例
-- 实践部分
-  - 重现案例
-  - 套用解决方案
-  - 大量代码示例
-  - 从构建环境开始
+这篇文章将介绍优化的思路，并结合案例来介绍几个主要问题的优化方案和效果。在下一篇文章中将搭建一个测试环境，使用测试数据来重现主要的问题并套用这些优化方案来尝试性能调优。
+
+- Oracle 数据库 SQL 调优笔记 1 - 思路和方案（本文）
+- [Oracle 数据库 SQL 调优笔记 2 - 重现与实践](#/post/Oracle%20数据库%20SQL%20调优笔记%202%20-%20重现与实践)
 
 ### 解决方案
 
-具体运用了的解决方法有以下几种：
+解决了实际问题的方案有以下几种：
 
 - 添加索引（针对表读取大于写入的场景）
 - 优化和改写相同逻辑（让其使用索引）
@@ -49,7 +43,7 @@ tags:
 - 使用 `merge` 代替 `update`
 - 修改业务逻辑（效果好但没有普适性）
 
-未运用到实际问题上，但是试验过有效的方案有下面这些：
+此外，试验过有效的方案还有下面这些：
 
 - 使用 `partition` 表分区提高效率
 - 使用 `/*+ APPEND */` 配合 `nologging` 减少日志提高写入效率
@@ -408,242 +402,3 @@ create table table_name (
 alter system flush buffer_cache;
 alter system flush shared_pool;
 ```
-
-### 重现和实践
-
-这是实践部分。
-
-#### 搭建测试环境
-
-如果环境就绪请跳过这一步。
-
-方便起见，我们直接用 Docker 来快速搭建一个 Oracle 数据库环 境。如果你还没有 Docker 环境，那么首先从 [这里](https://www.docker.com/get-started) 下载并安装 Docker。
-
-在命令行确认一下 Docker 版本，看看有没有安装成功。
-
-```bash
-$ docker --version
-Docker version 18.09.0, build 4d60db4
-```
-
-首先登陆 Docker Hub，使用下载时注册的账户。敲以下命令然后根据提示来登陆即可。
-
-```bash
-$ docker login
-```
-
-登陆完成后，可以拉取 Oracle 数据库环境了。使用下面的命令，拉取一个别人已经配置好的 Oracle 12c 版本的数据库。这个版本不是企业版，不能做表分区，不过这次我们不尝试表分区内容，所以标准版足够了。
-
-```bash
-$ docker pull sath89/oracle-12c
-```
-
-文件有点大，等安装完成后，使用下面的命令来启动 Oracle 数据库。
-
-```bash
-$ docker run -d -e WEB_CONSOLE=false -p 1521:1521 sath89/oracle-12c
-```
-
-稍等片刻，控制台会输出一长串的 ID，Oracle 数据库已经启动成功了，并且映射到本地 `1521` 端口上了，这时可以使用任何你喜欢的工具连接数据库进行后面的操作了。连接数据库时使用下面的参数。
-
-```yaml
-hostname: localhost
-port: 1521
-sid: xe
-service name: xe
-username: system
-password: oracle
-```
-
-也可以直接进入虚拟机环境中使用 SQL\*Plus。
-
-```bash
-# 首先拿到 Container 的 ID
-$ docker ps
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                              NAMES
-2a00bcc34a0f        sath89/oracle-12c   "/entrypoint.sh "   8 minutes ago       Up 8 minutes        0.0.0.0:1521->1521/tcp, 8080/tcp   recursing_saha
-# 用拿到的 ID 进入控制台
-$ docker exec -it 2a00bcc34a0f /bin/bash
-# 可以看到前缀的变换，现在已经处于虚拟机中的控制台
-# 然后，切换到 oracle 用户
-root@2a00bcc34a0f:/\# su oracle
-# 进入 Oracle 安装目录
-oracle@2a00bcc34a0f:/$ cd $ORACLE_HOME
-# 启动 sqlplus
-oracle@2a00bcc34a0f:/u01/app/oracle/product/12.1.0/xe$ bin/sqlplus / as sysdba
-
-SQL*Plus: Release 12.1.0.2.0 Production on Tue Jan 8 09:51:44 2019
-
-Copyright (c) 1982, 2014, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 12c Standard Edition Release 12.1.0.2.0 - 64bit Production
-
-SQL> select 1 from dual;
-
-   1
-----------
-   1
-
-SQL>
-```
-
-要关闭 Oracle 数据库，输入下面的命令。如果不知道 Container ID，可以使用 `docker ps` 命令查询。
-
-```bash
-$ docker container stop [container id]
-```
-
-参考文档：
-
-- [Docker Documentation](https://docs.docker.com/)
-- [Docker Hub - sath89/oracle-12c](https://hub.docker.com/r/sath89/oracle-12c)
-
-#### 准备测试数据
-
-我们直接抽取 `dba_objects` 的数据作为测试数据。
-
-```sql
-SQL> create table test_table as select * from dba_objects;
-
-Table created.
-```
-
-查看一下数据量。
-
-```sql
-SQL> select count(1) from test_table;
-
-  COUNT(1)
-----------
-     90883
-```
-
-现在我们的测试数据准备好了，这张表目前没有任何索引，主键也没有。
-
-参考文档：
-
-- [Database Reference - 2.179 ALL_OBJECTS](https://docs.oracle.com/database/121/REFRN/GUID-AA6DEF8B-F04F-482A-8440-DBCB18F6C976.htm#REFRN20146)
-
-#### 打开 `autotrace` 和 `timing` 显示执行计划和时间。
-
-执行计划和时间有助于分析 SQL 性能，我们先打开 `autotrace` 和 `timing` 看看效果。
-
-```sql
-SQL> set autotrace on;
-SQL> set timing on;
-SQL> select count(1) from test_table;
-
-  COUNT(1)
-----------
-     90883
-
-Elapsed: 00:00:00.06
-
-Execution Plan
-----------------------------------------------------------
-Plan hash value: 711311523
-
--------------------------------------------------------------------------
-| Id  | Operation          | Name       | Rows  | Cost (%CPU)| Time  |
--------------------------------------------------------------------------
-|   0 | SELECT STATEMENT   |            |     1 |   416   (1)| 00:00:01 |
-|   1 |  SORT AGGREGATE    |            |     1 |            |          |
-|   2 |   TABLE ACCESS FULL| TEST_TABLE |   100K|   416   (1)| 00:00:01 |
--------------------------------------------------------------------------
-
-Note
------
-   - dynamic statistics used: dynamic sampling (level=2)
-
-
-Statistics
-----------------------------------------------------------
-    0  recursive calls
-    0  db block gets
- 1528  consistent gets
- 1525  physical reads
-    0  redo size
-  544  bytes sent via SQL*Net to client
-  551  bytes received via SQL*Net from client
-    2  SQL*Net roundtrips to/from client
-    0  sorts (memory)
-    0  sorts (disk)
-    1  rows processed
-```
-
-执行计划的解读可以参考下面的资料，但是官方资料很多地方都不在我们的关注点上，不过好在仔细阅读执行计划也能悟出很多有用的信息，至少走没走索引是看一眼就知道的。
-
-参考文档：
-
-- [Database SQL Tuning Guide - 7 Reading Execution Plans](https://docs.oracle.com/database/121/TGSQL/tgsql_interp.htm#TGSQL94618)
-
-#### 重现索引优化案例
-
-// TODO
-
-```sql
-create table test_dba as select rownum as id, d.*, t.* from dba_objects d, (select level as type_code from dual connect by level <= 100) t;
-
-select
-  count(1)
-from
-  test_dba t
-where
-  t.timestamp >= '2015-07-06:11:00:00'
-  and t.timestamp <= '2015-07-06:12:00:00'
-  and t.object_type = upper('table')
-  and t.status = upper('valid');
-
-
-create table characters as select
-  -- 角色 ID
-  lpad(level, 8, '0') as character_id,
-  -- 玩家 ID，可重复
-  floor(dbms_random.value(1, 500000)) as gamer_id,
-  -- 角色性别，0: Female，1: Male
-  floor(dbms_random.value(0, 2)) as character_gender,
-  -- 角色等级
-  floor(dbms_random.value(1, 100)) as character_level,
-  -- 角色持有的金币
-  floor(dbms_random.value(1, 100)) as character_coin,
-  -- 创建时间
-  current_timestamp as create_date,
-  -- 角色名称
-  'NAME_' || level as character_name,
-  -- 其他的字段
-  'INFO1_' || current_timestamp as character_info1,
-  'INFO2_' || current_timestamp as character_info2,
-  'INFO3_' || current_timestamp as character_info3
-from dual connect by level <= 500000;
-
-alter table characters 
-  alter column character_id varchar2(8) not null;
-alter table characters 
-  add constraint characters_pk primary key (character_id);
-
-SELECT ABS(MOD(DBMS_RANDOM.RANDOM,100000000)) FROM DUAL;
-
-select count(1) from (
-select gamer_id from characters group by gamer_id having count(gamer_id) > 1);
-
-select character_id, gamer_id, character_gender, character_level from characters where rownum <= 10;
-
-select max(count(gamer_id)) from characters group by gamer_id having count(1) > 1;
-
-SELECT segment_name AS TABLENAME,
-       BYTES B,
-       BYTES / 1024 KB,
-       BYTES / 1024 / 1024 MB
-  FROM user_segments
-where segment_name = upper('characters');
-
-```
-
-
-**⚠️ Tips**
-
-数据准备完毕，不过为了方便再现性能问题，我们可以限制一下 Docker 引擎使用的 CPU 资源，参考下图。
-
-![Docker Configuration](/img/DockerConfiguration.png)

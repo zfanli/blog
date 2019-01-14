@@ -1,5 +1,6 @@
 // list of post file name
 export default [
+  '2019-01-14-oracle-reproduce',
   '2018-12-31-oracle-sql-tuning',
   '2018-06-05-simple-usage-mongodb',
   '2018-05-30-restful-python',

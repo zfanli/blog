@@ -28,9 +28,9 @@ alter system flush shared_pool;
 - [Oracle 数据库 SQL 调优笔记 1 - 思路和方案](#/post/Oracle%20数据库%20SQL%20调优笔记%201%20-%20思路和方案)
 - Oracle 数据库 SQL 调优笔记 2 - 重现与实践（本文）
 
-### 重现和实践
+### 准备
 
-这是实践部分。
+这是准备部分。
 
 #### 搭建测试环境
 
@@ -363,7 +363,7 @@ analyze table items compute statistics;
 
 - [Database SQL Tuning Guide - 7 Reading Execution Plans](https://docs.oracle.com/database/121/TGSQL/tgsql_interp.htm#TGSQL94618)
 
-#### 探索测试数据
+### 探索测试数据
 
 环境搭建好了，数据也准备好了，可以开始实战了。不过先别慌，这些数据都是随机生成的，我们不妨先来探索一下，了解这些数据的大致情况。
 
@@ -574,38 +574,311 @@ Elapsed: 00:00:01.58
 我们已经大概了解了数据的情况。
 
 - 角色表只有 50 万数据，表空间仅 151 M，即使不使用索引，把全表数据加载到内存处理依旧很快；
-- 而物品表有 500 万数据，表空间有 1735 M，任何走全表的操作都会降低 SQL 执行的速度，这个尺寸的数据已经不太适合全部加载到内存后再做操作了。
+- 而物品表有 500 万数据，表空间有 1,735 M，任何走全表的操作都会降低 SQL 执行的速度，这个尺寸的数据已经不太适合全部加载到内存后再做操作了。
 
-#### 重现索引优化案例
+### 重现索引优化案例
 
 目前除了主键以外还没有其他索引，在之前的探索中我们已经发现了一些性能问题的端倪，现在让我们设计一个需求。
 
-角色表中的 `character_coin` 字段表示这个角色的持有金币数量，我们假设一个需求，
+角色表中的 `character_coin` 字段表示这个角色的持有金币数量，我们假设一个需求，出于统计目的，现在需要知道所有持有金币数量少于 `1,000` 的角色，其所持有的物品 ID 为 `7` 的物品的数量总和。
+
+- **需求**：
+  - 物品数量总和
+- **条件**：
+  - 角色持有金币数量少于 `1,000`
+  - 物品 ID 为 `7`
+  - 物品有效
+
+别去考虑这个需求有什么用。首先这是简单的 `inner join` 关系，条件也很明确，所以我们很快可以得出下面的 SQL 语句。
 
 ```sql
-SQL> select * from (
-  select item_id
+select
+  sum(i.item_num)
+from
+  items i
+inner join
+  characters c
+on
+  c.character_id = i.character_id
+where
+      c.character_coin <= 1000
+  and i.enable_flag = 1
+  and i.item_id = 7;
+```
 
-  from items where enable_flag = 1
-  and item_id = 7
-)
+把这条语句丢给 Oracle 执行一下试试看。
+
+```sql
+SUM(I.ITEM_NUM)
+---------------
+         256808
+
+Elapsed: 00:00:17.30
+```
+
+这个结果是物品表 `item_num` 字段的求和的值，虽然结果是 25 万多，但是涉及到的数据应该不会很多。最终这条语句执行花了 17.3 秒。
+
+让我们先来看看执行计划，尝试定位一下性能问题所在。
+
+```sql
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 2594570633
+
+------------------------------------------------------------------------
+
+| Id  | Operation           | Name       | Rows  | Bytes |TempSpc| Cost(%CPU) | Time      |
+
+------------------------------------------------------------------------
+
+|   0 | SELECT STATEMENT    |            |     1 |    29 |       | 64304   (1)| 00:00:03 |
+
+|   1 |  SORT AGGREGATE     |            |     1 |    29 |       |            |          |
+
+|*  2 |   HASH JOIN         |            | 49985 |  1415K|  1128K| 64304   (1)| 00:00:03 |
+
+|*  3 |    TABLE ACCESS FULL| CHARACTERS | 50010 |   537K|       |  5218   (1)| 00:00:01 |
+
+|*  4 |    TABLE ACCESS FULL| ITEMS      | 49985 |   878K|       | 58960   (1)| 00:00:03 |
+
+------------------------------------------------------------------------
 
 
-select count(1) from ()
-select 
-c.character_id,
-i.item_num
-from characters c inner join items i
-on c.character_id = i.character_id
-where c.character_gender = 0
-and c.character_coin > 2000
-and i.enable_flag = 1
-and i.item_id = 7
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("C"."CHARACTER_ID"="I"."CHARACTER_ID")
+   3 - filter("C"."CHARACTER_COIN"<=1000)
+   4 - filter("I"."ITEM_ID"=7 AND "I"."ENABLE_FLAG"=1)
+
+
+Statistics
+----------------------------------------------------------
+    191  recursive calls
+      0  db block gets
+ 238878  consistent gets
+ 237747  physical reads
+      0  redo size
+    551  bytes sent via SQL*Net to client
+    551  bytes received via SQL*Net from client
+      2  SQL*Net roundtrips to/from client
+      7  sorts (memory)
+      0  sorts (disk)
+      1  rows processed
+```
+
+执行计划提示了很多信息，我们提取一些对我们有用的出来。
+
+- 整体 cost 为 `64,304`
+- `CHARACTERS` 访问了全表
+- `ITEMS` 访问了全表
+
+#### 开始尝试添加索引
+
+从执行计划中可以了解到，两张表都走了全表检索是真正影响执行效率的原因所在，对于这个场合我们不需要所有的数据，所以可以使用索引来优化查询性能。
+
+对于角色表来说，仅使用到两个字段作为查询的条件，`character_id` 作为关联条件，`character_coin` 作为筛选条件。所以对这 2 个字段创建索引。
+
+```sql
+create index characters_index1 on characters (
+  character_id,
+  character_coin
+);
+```
+
+对物品表来说，有 3 个字段作为查询条件，一个 `character_id` 作为关联条件，然后 `enable_flag` 和 `item_id` 作为筛选条件；此外，还有 1 个字段 `item_num` 最终被选出进行求和，所以一共需要对 4 个字段创建索引。
+
+```sql
+create index items_index1 on items (
+  character_id,
+  enable_flag,
+  item_id,
+  item_num
+);
+```
+
+创建好上面的索引，我们准备再执行一次之前的语句。不过先别急，Oracle 会自动使用缓存，所以如果重复查询同一条 SQL，速度只会越来越快，这会影响我们尝试性能调优的结果，所以我们先执行下面两条语句，清除掉缓存的影响。
+
+```sql
+alter system flush buffer_cache;
+alter system flush shared_pool;
+```
+
+好了，接下来让我们重新执行一次之前的语句。
+
+```sql
+SQL> select
+  sum(i.item_num)
+from
+  items i
+inner join
+  characters c
+on
+  c.character_id = i.character_id
+where
+      c.character_coin <= 1000
+  and i.enable_flag = 1
+  and i.item_id = 7;
+
+SUM(I.ITEM_NUM)
+---------------
+         256808
+
+Elapsed: 00:00:03.29
+```
+
+从 17.3 秒降低到了 3.29 秒，接近 5 倍的性能提升。再来看看执行计划上的变化。
+
+```sql
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 3200269783
+
+------------------------------------------------------------------------
+
+| Id  | Operation              | Name              | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+
+------------------------------------------------------------------------
+
+|   0 | SELECT STATEMENT       |                   |   1   |    29 |       |  6000   (1)| 00:00:01 |
+
+|   1 |  SORT AGGREGATE        |                   |   1   |    29 |       |            |          |
+
+|*  2 |   HASH JOIN            |                   |  5337 |   151K|  1128K|  6000   (1)| 00:00:01 |
+
+|*  3 |    INDEX FAST FULL SCAN| CHARACTERS_INDEX1 | 50010 |   537K|       |   458   (1)| 00:00:01 |
+
+|*  4 |    INDEX FAST FULL SCAN| ITEMS_INDEX1      | 49985 |   878K|       |  5416   (1)| 00:00:01 |
+
+------------------------------------------------------------------------
+
+
+Predicate Information (identified by operation id):
+---------------------------------------------------
+
+   2 - access("C"."CHARACTER_ID"="I"."CHARACTER_ID")
+   3 - filter("C"."CHARACTER_COIN"<=1000)
+   4 - filter("I"."ITEM_ID"=7 AND "I"."ENABLE_FLAG"=1)
+
+Note
+-----
+   - dynamic statistics used: dynamic sampling (level=2)
+   - 1 Sql Plan Directive used for this statement
+
+
+Statistics
+----------------------------------------------------------
+ 1653  recursive calls
+    0  db block gets
+27292  consistent gets
+22596  physical reads
+    0  redo size
+  551  bytes sent via SQL*Net to client
+  551  bytes received via SQL*Net from client
+    2  SQL*Net roundtrips to/from client
+  106  sorts (memory)
+    0  sorts (disk)
+    1  rows processed
+```
+
+依旧从执行计划上提取我们感兴趣的信息。
+
+- 整体 cost 为 `6,000`
+  - 相较之前的 `64,304` 有明显的改善
+- 角色表使用了新建的 `CHARACTERS_INDEX1` 索引
+  - 相较于全表检索，全索引检索对性能有明显的改善
+- 物品表使用了新建的 `ITEMS_INDEX1` 索引
+  - 同上
+
+#### 小结
+
+我们对目前遇到的问题和使用的方法做一个小结。
+
+- 执行计划可以帮助我们定位问题的所在
+  - **前提是表进行过分析**
+  - 当执行计划不准确时可能是由于统计信息过时
+  - 你需要重新进行表分析
+- 创建索引时尽量包含查询字段
+  - 包含更多的字段将造成索引表所占空间增大
+  - 包含更多字段也将造成索引表检索时间变长
+  - 没有回查的开销
+- 创建索引时如果仅包含查询字段
+  - 使用 `ROWID` 对原表进行回查获取查询字段的数据
+- 创建索引将降低数据写入效率
+  - 因为数据变动时需要同步更新索引表
+  - 写入操作多的表慎加索引
+
+
+### 重现 `merge` 优化案例
+
+
+```sql
+update items set enable_flag = 0;
+
+5000000 rows updated.
+
+Elapsed: 00:03:38.34
+
+Execution Plan
+----------------------------------------------------------
+Plan hash value: 1645999228
+
+------------------------------------------------------------------------
+---------
+
+| Id  | Operation	 | Name 	| Rows	| Bytes | Cost (%CPU)| T
+ime	|
+
+------------------------------------------------------------------------
+---------
+
+|   0 | UPDATE STATEMENT |		|  5000K|    85M| 19921   (1)| 0
+0:00:01 |
+
+|   1 |  UPDATE 	 | ITEMS	|	|	|	     |
+	|
+
+|   2 |   INDEX FULL SCAN| ITEMS_INDEX1 |  5000K|    85M| 19921   (1)| 0
+0:00:01 |
+
+------------------------------------------------------------------------
+---------
 
 
 
+Statistics
+----------------------------------------------------------
+     378682  recursive calls
+    7089302  db block gets
+     362706  consistent gets
+     290592  physical reads
+ 1992056592  redo size
+	873  bytes sent via SQL*Net to client
+	840  bytes received via SQL*Net from client
+	  3  SQL*Net roundtrips to/from client
+	  7  sorts (memory)
+	  1  sorts (disk)
+    5000000  rows processed
 ```
 
 ```sql
-create index items_index1 on items (enable_flag);
+update items set enable_flag = 0;
+
+merge into items i using flag_back_up f
+on (
+  i.item_order = f.item_order
+  and i.character_id = f.character_id
+)
+when matched then
+update set i.enable_flag = f.enable_flag;
+
+select sum(item_id) from items
+where enable_flag = 1
+and item_id = 7
+and character_id in (
+  select character_id from characters
+  where character_coin <= 1000
+);
+
+create table flag_back_up as select item_order, character_id, enable_flag from items;
 ```

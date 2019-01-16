@@ -90,7 +90,22 @@ select plan_table_output from table(dbms_xplan.display())；
 create index index_name on table_name (fields...);
 ```
 
-如果创建了相应索引，但因为优化器判断不去走索引的情况，可以用 `hint` 强制走索引看看效果。`index()` 的括号里面一般填两个参数，第一个为表名，第二个是索引名。
+如果创建了相应索引，但因为优化器判断不去走索引的情况，可以用 `hint` 强制走索引看看效果。
+
+一般出现这种情况有两个原因：
+
+- 表没有分析过或者统计信息过时了
+- 优化器基于 cost 计算发现走索引 cost 更高
+
+第一种情况，执行下面的表分析语句基本可以解决。
+
+```sql
+analyze table table_name compute statistics;
+```
+
+而第二种情况，如果实际效果走索引更快的话，可以使用下面的 `hint` 强制使用索引。
+
+`index()` 的括号里面一般填两个参数，第一个为表名，第二个是索引名。
 
 ```sql
 select /*+ index(target_table target_index) */

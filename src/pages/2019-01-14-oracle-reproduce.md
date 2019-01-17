@@ -763,7 +763,6 @@ Predicate Information (identified by operation id):
 Note
 -----
    - dynamic statistics used: dynamic sampling (level=2)
-   - 1 Sql Plan Directive used for this statement
 
 
 Statistics
@@ -799,8 +798,8 @@ Statistics
   - 当执行计划不准确时可能是由于统计信息过时
   - 你需要重新进行表分析
 - 创建索引时尽量包含查询字段
-  - *包含更多的字段将造成索引表所占空间增大
-  - *包含更多字段也将造成索引表检索时间变长
+  - \*包含更多的字段将造成索引表所占空间增大
+  - \*包含更多字段也将造成索引表检索时间变长
   - 包含查询字段可以避免回查开销
 - 创建索引时如果仅包含查询条件
   - 使用 `ROWID` 对原表进行回查获取查询字段的数据
@@ -808,77 +807,118 @@ Statistics
   - 因为数据变动时需要同步更新索引表
   - 写入操作多的表慎加索引
 
-
 ### 重现 `merge` 优化案例
 
+就数据库的增删改查来说，可能我们平时熟悉的是 `insert`、`delete`、`update` 和 `select`，而 `merge` 是一个聚合操作，可以在一条语句里面实现增删改查。
+
+merge 的语法结构表明了其适用于参照一张表的数据来操作另一张表的场合。其他操作暂且不论，当使用 merge 来替代 update 时，由于更新机制的不同，似乎 merge 拥有天然优势，经常能比 update 操作要快。
+
+下面的语句将物品表所有数据的 `enable_flag` 设置为 `0`，即失效所有物品。经过多次清除缓存再执行之后，在我本地环境下平均水平在 2 分 10 秒左右。
 
 ```sql
-update items set enable_flag = 0;
+SQL> update items set enable_flag = 0;
 
 5000000 rows updated.
 
-Elapsed: 00:03:38.34
+Elapsed: 00:02:16.88
+```
 
-Execution Plan
-----------------------------------------------------------
-Plan hash value: 1645999228
+下面则是使用 merge 来进行这一操作，同样的多次清除缓存执行的结果，平均水平在 1 分 30 秒左右。
 
-------------------------------------------------------------------------
----------
+```sql
+SQL> merge into items i using dual
+on (1=1) when matched then
+update set i.enable_flag = 0;
 
-| Id  | Operation	 | Name 	| Rows	| Bytes | Cost (%CPU)| T
-ime	|
+5000000 rows merged.
 
-------------------------------------------------------------------------
----------
+Elapsed: 00:01:35.50
+```
 
-|   0 | UPDATE STATEMENT |		|  5000K|    85M| 19921   (1)| 0
-0:00:01 |
+即使是这么简单的任务，merge 依旧比 update 要快 40 秒左右，提升 30% 的效率。
 
-|   1 |  UPDATE 	 | ITEMS	|	|	|	     |
-	|
+但是通过分析两边的执行计划，我们得到了下面的信息。
 
-|   2 |   INDEX FULL SCAN| ITEMS_INDEX1 |  5000K|    85M| 19921   (1)| 0
-0:00:01 |
+- `update` 的 cost 为 39,811；`merge` 为 59,127
+- `update` 访问并修改了 61M 数据；`merge` 最终修改了 61M 数据，但是中途访问了 1,239M 数据
 
-------------------------------------------------------------------------
----------
+merge 虽然速度快于 update，但是由于访问数据量远超过 update，所以优化器判定其开销大于 update。
+
+简单说，就是这种情况下 merge 会使用更多的内存来提升执行效率。不过 merge 本身并不是被设计成主要用来处理这种情况的，来看一个复杂点的例子。
+
+首先还是设计一个更新的需求。
+
+探索数据的时候我们发现同一个玩家 ID 下面会有重复的角色，而且重复角色有接近 19 万之多！所以我们做一个恶作剧，找到存在多个角色的玩家，保留等级最高的那个角色不动，将其他的角色对应的所有的物品数量，更新为这个角色的等级！
+
+> 还是那句话，别想这有什么意义。就当是来自一个黑客的恶作剧把 👿！
+
+分析一下这个需求，我们需要做这些事情。
+
+- **需求**：
+  - 将物品数量字段更新为等级字段的值
+- **条件**：
+  - 玩家 ID 相同
+  - 拥有多个角色
+  - 除了等级最高的角色之外
+  - 所有物品栏
+
+```sql
+update items i set enable_flag = 0
+where exists(
+  select 1 from (
+    select
+      c.character_id,
+      row_number() over(
+        partition by c.gamer_id
+        order by c.character_level desc
+      ) as flag
+    from
+      characters c
+    inner join
+      (select gamer_id from characters
+      group by gamer_id having count(1) > 1) t
+    on t.gamer_id = c.gamer_id
+  ) c
+  where c.flag > 1
+  and c.character_id = i.character_id
+);
 
 
-
-Statistics
-----------------------------------------------------------
-     378682  recursive calls
-    7089302  db block gets
-     362706  consistent gets
-     290592  physical reads
- 1992056592  redo size
-	873  bytes sent via SQL*Net to client
-	840  bytes received via SQL*Net from client
-	  3  SQL*Net roundtrips to/from client
-	  7  sorts (memory)
-	  1  sorts (disk)
-    5000000  rows processed
+select count(1) from (
+  select
+    c.character_id,
+    row_number() over(
+      partition by c.gamer_id
+      order by c.character_level desc
+    ) as flag
+  from
+    characters c
+  inner join
+    (select gamer_id from characters
+    group by gamer_id having count(1) > 1) t
+  on t.gamer_id = c.gamer_id
+) where flag > 1
+;
 ```
 
 ```sql
-update items set enable_flag = 0;
-
-merge into items i using flag_back_up f
-on (
-  i.item_order = f.item_order
-  and i.character_id = f.character_id
-)
+merge into items i using (
+  select character_id from (
+    select
+      c.character_id,
+      row_number() over(
+        partition by c.gamer_id
+        order by c.character_level desc
+      ) as flag
+    from
+      characters c
+    inner join
+      (select gamer_id from characters
+      group by gamer_id having count(1) > 1) t
+    on t.gamer_id = c.gamer_id
+  ) where flag > 1
+) t
+on (i.character_id = t.character_id)
 when matched then
-update set i.enable_flag = f.enable_flag;
-
-select sum(item_id) from items
-where enable_flag = 1
-and item_id = 7
-and character_id in (
-  select character_id from characters
-  where character_coin <= 1000
-);
-
-create table flag_back_up as select item_order, character_id, enable_flag from items;
+update set i.enable_flag = 0;
 ```

@@ -848,149 +848,45 @@ merge 虽然速度快于 update，但是由于访问数据量远超过 update，
 
 首先还是设计一个更新的需求。
 
-探索数据的时候我们发现同一个玩家 ID 下面会有重复的角色，而且重复角色有接近 19 万之多！所以我们做一个恶作剧，找到存在多个角色的玩家，保留等级最高的那个角色不动，将其他的角色对应的所有的物品数量，更新为这个角色的等级！
-
-> 还是那句话，别想这有什么意义。就当是来自一个黑客的恶作剧把 👿！
+探索数据的时候我们发现同一个玩家 ID 下面会有重复的角色，而且重复角色有接近 19 万之多！现在要发布上一次活动的奖励，那就是增加每个符合条件的玩家的角色金币数量，就加一个金币好了，当然对于拥有多个角色的玩家来说，只有等级最高的那个角色才会有奖励。
 
 分析一下这个需求，我们需要做这些事情。
 
 - **需求**：
-  - 将物品数量字段更新为等级字段的值
-  - 更新最后更新时间字段的值
+  - 更新金币数量为原有数量 +1
 - **条件**：
-  - 玩家 ID 相同
-  - 拥有多个角色
-  - 除了等级最高的角色之外
-  - 所有物品栏
+  - 一个玩家 ID 下面仅一个角色进行更新
+  - 玩家 ID 相同时更新等级最大的角色
 
 // 施工现场
 
 ```sql
-update items i
-set (item_num, last_update_time)
-= (
-  select
-    t.character_level as item_num,
-    current_timestamp as last_update_time
+update characters c set character_coin = (
+  select character_coin + 1
   from (
-    select
-      c.character_id,
-      c.character_level,
+    select character_coin,
+      character_id,
       row_number() over(
-        partition by c.gamer_id
-        order by c.character_level desc
+        partition by gamer_id 
+        order by character_level desc
       ) as flag
-    from
-      characters c
-    inner join
-      (select gamer_id from characters
-      group by gamer_id having count(1) > 1) t
-    on t.gamer_id = c.gamer_id
+    from characters
   ) t
-  where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100
-)
-where exists (
+   where c.character_id = t.character_id
+   and flag = 1 
+) where exists (
   select 1 from (
-    select
-      c.character_id,
+        select character_coin,
+      character_id,
       row_number() over(
-        partition by c.gamer_id
-        order by c.character_level desc
+        partition by gamer_id 
+        order by character_level desc
       ) as flag
-    from
-      characters c
-    inner join
-      (select gamer_id from characters
-      group by gamer_id having count(1) > 1) t
-    on t.gamer_id = c.gamer_id
-  ) t where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100
-);
-
-
-
-
-select count(1) from items i, (
-    select
-      c.character_id,
-      c.character_level,
-      row_number() over(
-        partition by c.gamer_id
-        order by c.character_level desc
-      ) as flag
-    from
-      characters c
-    inner join
-      (select gamer_id from characters
-      group by gamer_id having count(1) > 1) t
-    on t.gamer_id = c.gamer_id
+    from characters
   ) t
-  where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100;
-
-select count(1) from
-items i,
-(
-select
-      c.character_id,
-      row_number() over(
-        partition by c.gamer_id
-        order by c.character_level desc
-      ) as flag
-    from
-      characters c
-    inner join
-      (select gamer_id from characters
-      group by gamer_id having count(1) > 1) t
-    on t.gamer_id = c.gamer_id and c.character_gender = 0
-  ) t where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100
-
-
-update items i set i.enable_flag = 0
-from characters c where c.character_id < 10
-and c.character_id = i.character_id;
-
-
-select count(1) from (
-  select
-    c.character_id,
-    row_number() over(
-      partition by c.gamer_id
-      order by c.character_level desc
-    ) as flag
-  from
-    characters c
-  inner join
-    (select gamer_id from characters
-    group by gamer_id having count(1) > 1) t
-  on t.gamer_id = c.gamer_id
-) where flag > 1
-;
-```
-
-```sql
-merge into items i using (
-  select
-    rownum as rn,
-    c.character_id,
-    c.character_level,
-    row_number() over(
-      partition by c.gamer_id
-      order by c.character_level desc
-    ) as flag
-  from
-    characters c
-  inner join
-    (select gamer_id from characters
-    group by gamer_id having count(1) > 1) g
-  on g.gamer_id = c.gamer_id
-) t
-on (i.character_id = t.character_id and t.flag > 1 and t.rn <= 100)
-when matched then
-update set i.item_num = t.character_level,
-  last_update_time = current_timestamp;
+   where c.character_id = t.character_id
+   and flag = 1 
+);
 ```
 
 

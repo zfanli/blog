@@ -858,8 +858,6 @@ merge 虽然速度快于 update，但是由于访问数据量远超过 update，
   - 一个玩家 ID 下面仅一个角色进行更新
   - 玩家 ID 相同时更新等级最大的角色
 
-// 施工现场
-
 ```sql
 update characters c set character_coin = (
   select character_coin + 1
@@ -867,44 +865,51 @@ update characters c set character_coin = (
     select character_coin,
       character_id,
       row_number() over(
-        partition by gamer_id 
+        partition by gamer_id
         order by character_level desc
       ) as flag
     from characters
   ) t
    where c.character_id = t.character_id
-   and flag = 1 
+   and flag = 1
 ) where exists (
   select 1 from (
         select character_coin,
       character_id,
       row_number() over(
-        partition by gamer_id 
+        partition by gamer_id
         order by character_level desc
       ) as flag
     from characters
   ) t
    where c.character_id = t.character_id
-   and flag = 1 
+   and flag = 1
 );
 ```
-
-
-
 
 ```sql
-update items i
-set (item_num, last_update_time)
-= (
-  select
-    t.character_level as item_num,
-    current_timestamp as last_update_time
-  from temp01 t
-  where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100
+merge into characters c using (
+  select character_coin + 1 as character_coin
+  from (
+    select character_coin,
+      character_id,
+      row_number() over(
+        partition by gamer_id
+        order by character_level desc
+      ) as flag
+    from characters
+  ) t
+   where c.character_id = t.character_id
+) t on (
+  c.character_id = t.character_id
+  and t.flag = 1
 )
-where exists (
-  select 1 from temp01 t where i.character_id = t.character_id
-  and t.flag > 1 and rownum <= 100
-);
+when matched then
+update c.character_coin = t.character_coin;
 ```
+
+// 施工现场
+
+机器性能限制没跑出来结果，时间原因无法继续调试下去，结论是这种情况下，`merge` 相较于 `update` 会快很多。原因是前者仅进行一次遍历，而后者由于结构问题会多次遍历原表，影响性能。
+
+等有时间并且有精力的时候把执行结果补上。

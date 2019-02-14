@@ -6,6 +6,7 @@ import {
   SET_THE_REAL_LENGTH,
 } from './actions'
 import ac from './App.config'
+import { isProductionMode } from './utils/helper';
 
 Vue.use(Vuex)
 
@@ -18,7 +19,12 @@ export default new Vuex.Store({
   getters: {
     postIds(state) {
       // sort by keys desc
-      return Object.keys(state.posts).sort((a, b) => b - a)
+      let ids = Object.keys(state.posts).sort((a, b) => b - a)
+      // hide draft in production mode
+      if (isProductionMode()) {
+        ids = ids.filter(id => !state.posts[id].attributes.draft)
+      }
+      return ids
     },
     postList(state, getters) {
       return getters.postIds.map(id => state.posts[id])
@@ -26,9 +32,11 @@ export default new Vuex.Store({
     getPostByTitle(_, getters) {
       return title => getters.postList.find(p => p.attributes.title === title)
     },
-    isLoading(state, getters) {
-      if (state.realLength && getters.postList) {
-        return state.realLength !== getters.postList.length
+    isLoading(state) {
+      if (state.realLength) {
+        // because there are drafts exists in the postList
+        // so compare to the posts object
+        return state.realLength !== Object.keys(state.posts).length
       }
       return true
     },

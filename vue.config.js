@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    port: 4000,
+    port: 4001,
   },
   baseUrl: './',
   chainWebpack: config => {

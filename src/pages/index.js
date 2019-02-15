@@ -1,5 +1,7 @@
 // list of post file name
 export default [
+  '2019-02-15-java-servlet',
+  '2019-02-14-java-servlet-setup',
   '2019-01-31-javascript-concept-carding',
   '2019-01-14-oracle-reproduce',
   '2018-12-31-oracle-sql-tuning',

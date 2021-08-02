@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" ref="wrapper">
     <div class="menu" ref="stage">
       <div v-for="item in menu" :key="item.name" class="menu-item">
         {{ item.name }}
@@ -29,8 +29,13 @@ export default {
   mounted() {
     this.parallax = debounce(this.parallax, 10);
     window.addEventListener("mousemove", this.parallax);
-    if (this.$tools.mobile)
-      this.$refs.stage.style.transition = "transform .2s ease";
+    if (this.$tools.mobile) {
+      // this.$refs.stage.style.transition = "transform .2s ease";
+      this.$refs.wrapper.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        this.parallax(e.touches[0]);
+      });
+    }
   },
 
   unmounted() {
@@ -38,9 +43,8 @@ export default {
   },
 
   methods: {
-    parallax(e) {
-      const { clientX, clientY } = e,
-        { innerWidth, innerHeight } = window,
+    parallax({ clientX, clientY }) {
+      const { innerWidth, innerHeight } = window,
         offsetX = 0.5 - clientX / innerWidth,
         offsetY = 0.5 - clientY / innerHeight,
         dy = -offsetX * this.offset + "px",
@@ -69,13 +73,14 @@ export default {
 
 <style lang="scss" scoped>
 $font-size: 4rem;
-$font-color: #ff3366;
+$font-size-mobile: 2rem;
+$font-color: #fe214f;
 $perspective: 60rem;
 $divide-height: 4px;
 $divide-position: 49%;
 
 .wrapper {
-  background: linear-gradient(45deg, #002b2a, #005352);
+  background: linear-gradient(45deg, #101d40, #182b60);
   perspective: $perspective;
   display: flex;
   justify-content: center;
@@ -89,7 +94,6 @@ $divide-position: 49%;
     text-transform: uppercase;
     text-align: center;
     transform-style: preserve-3d;
-    line-height: 1.2;
 
     .menu-item {
       cursor: pointer;
@@ -97,6 +101,12 @@ $divide-position: 49%;
       position: relative;
       font-size: $font-size;
       font-weight: bold;
+      line-height: 1.2;
+
+      @media screen and (max-width: 580px) {
+        font-size: $font-size-mobile;
+        line-height: 1.5;
+      }
 
       &::before {
         content: "";
@@ -121,6 +131,7 @@ $divide-position: 49%;
         top: 0;
         color: $font-color;
         transition: all 0.8s cubic-bezier(0.15, 1, 0.4, 1);
+        white-space: nowrap;
       }
 
       .mask + .mask {

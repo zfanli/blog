@@ -1,5 +1,9 @@
 <template>
   <div class="wrapper" ref="wrapper">
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+
     <div class="menu" ref="stage">
       <div v-for="item in menu" :key="item.name" class="menu-item">
         {{ item.name }}
@@ -30,7 +34,7 @@ export default {
     this.parallax = debounce(this.parallax, 10);
     window.addEventListener("mousemove", this.parallax);
     if (this.$tools.mobile) {
-      // this.$refs.stage.style.transition = "transform .2s ease";
+      this.$refs.stage.style.transition = "transform .2s ease";
       this.$refs.wrapper.addEventListener("touchmove", (e) => {
         e.preventDefault();
         this.parallax(e.touches[0]);
@@ -72,6 +76,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@function make-stars($n) {
+  $value: 0 0 #fff;
+  @for $i from 1 through $n {
+    $value: #{$value}, #{random(1000) / 10}vw #{random(1000) / 10}vh #fff;
+  }
+  @return $value;
+}
+
+$stars-large: 100;
+$stars-small: 25;
+$stars-ratio: (1, 2, 6);
+$anime-duration: 40s;
+
 $font-size: 4rem;
 $font-size-mobile: 2rem;
 $font-color: #fe214f;
@@ -80,12 +97,17 @@ $divide-height: 4px;
 $divide-position: 49%;
 
 .wrapper {
-  background: linear-gradient(45deg, #101d40, #182b60);
+  background-image: radial-gradient(
+    ellipse at bottom,
+    #1b2735 0%,
+    #090a0f 100%
+  );
   perspective: $perspective;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  overflow: hidden;
 
   .menu {
     display: flex;
@@ -159,6 +181,78 @@ $divide-position: 49%;
         }
       }
     }
+  }
+
+  .stars {
+    position: absolute;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100vh;
+    }
+  }
+
+  .stars:nth-child(1) {
+    height: 3px;
+    width: 3px;
+    animation: star-moves $anime-duration * 3 linear infinite;
+
+    &::after {
+      height: 3px;
+      width: 3px;
+    }
+  }
+
+  .stars:nth-child(2) {
+    height: 2px;
+    width: 2px;
+    animation: star-moves $anime-duration * 2 linear infinite;
+
+    &::after {
+      height: 2px;
+      width: 2px;
+    }
+  }
+
+  .stars:nth-child(3) {
+    height: 1px;
+    width: 1px;
+    animation: star-moves $anime-duration linear infinite;
+
+    &::after {
+      height: 1px;
+      width: 1px;
+    }
+  }
+
+  @for $i from 1 through 3 {
+    .stars:nth-child(#{$i}),
+    .stars:nth-child(#{$i})::after {
+      box-shadow: make-stars($stars-large * nth($stars-ratio, $i));
+    }
+  }
+
+  @media screen and (max-width: 580px) {
+    @for $i from 1 through 3 {
+      .stars:nth-child(#{$i}),
+      .stars:nth-child(#{$i})::after {
+        box-shadow: make-stars($stars-small * nth($stars-ratio, $i));
+      }
+    }
+  }
+}
+
+@keyframes star-moves {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -100vh, 0);
   }
 }
 </style>

@@ -5,13 +5,18 @@
     <div class="stars"></div>
 
     <div class="menu" ref="stage">
-      <div v-for="item in menu" :key="item.name" class="menu-item">
+      <router-link
+        v-for="item in menu"
+        :key="item.name"
+        :to="item.link"
+        class="menu-item"
+      >
         {{ item.name }}
         <span class="mask">{{ item.name }}</span>
         <span class="mask">
           <span>{{ item.name }}</span>
         </span>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>

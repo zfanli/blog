@@ -3,6 +3,7 @@
     <div class="stars"></div>
     <div class="stars"></div>
     <div class="stars"></div>
+    <div class="desc">Pixel stars parallax using pure CSS.</div>
 
     <div class="menu" ref="stage">
       <router-link
@@ -249,6 +250,13 @@ $divide-position: 49%;
         box-shadow: make-stars($stars-small * nth($stars-ratio, $i));
       }
     }
+  }
+
+  .desc {
+    color: #fff5;
+    position: fixed;
+    bottom: 0;
+    font-size: 12px;
   }
 }
 
